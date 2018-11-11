@@ -1,4 +1,4 @@
-var tokens = require('./tokens.js');
+var tokens = require('./power-rankings/src/tokens.js');
 var express = require('express');
 var path = require("path");
 var passport = require('passport');
@@ -13,6 +13,13 @@ var YahooFantasy = require("yahoo-fantasy");
 var APP_KEY = tokens.yahooConsumerKey();
 var APP_SECRET = tokens.yahooConsumerSecret();
 
+var userRoute = require('./routes/user');
+var scores = require('./routes/scores');
+
+var app = express();
+app.use('/user', userRoute);
+app.use('/scores', scores);
+
 passport.serializeUser(function (user, done) {
     done(null, user);
 });
@@ -20,6 +27,8 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (obj, done) {
     done(null, obj);
 });
+
+// Authentication code from: https://github.com/whatadewitt/yahoofantasysandbox/blob/master/app.js
 
 passport.use(
     new OAuth2Strategy(
@@ -29,7 +38,7 @@ passport.use(
             clientID: APP_KEY,
             clientSecret: APP_SECRET,
             callbackURL:
-                tokens.appUrl() + "/auth/callback"
+                tokens.serverUrl() + "/auth/callback"
         },
         function (accessToken, refreshToken, params, profile, done) {
             var options = {
@@ -54,8 +63,6 @@ passport.use(
                         refreshToken: refreshToken
                     };
 
-                    console.log(userObj);
-
                     app.yf.setUserToken(accessToken);
 
                     return done(null, userObj);
@@ -65,9 +72,6 @@ passport.use(
     )
 );
 
-var app = express();
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
 app.yf = new YahooFantasy(APP_KEY, APP_SECRET);
 app.use(logger("dev"));
 app.use(bodyParser.json());
@@ -75,7 +79,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
     session({
-        secret: "ok",
+        secret: tokens.sessionSecret(),
         resave: false,
         saveUninitialized: true
     })
@@ -97,27 +101,14 @@ app.get(
     "/auth/callback",
     passport.authenticate("oauth2", { failureRedirect: "/login" }),
     function (req, res) {
-        res.redirect(req.session.redirect || "/");
+        res.redirect(tokens.clientUrl() + "/rankings");
     }
 );
-
-app.get('/', function (req, res) {
-    res.render('index', { user: req.user });
-});
-
-app.get('/account', ensureAuthenticated, function (req, res) {
-    res.render('account', { user: req.user });
-});
 
 app.get('/login', function (req, res) {
     res.render('login', { user: req.user });
 });
 
-function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) { return next(); }
-    res.redirect('/login')
-}
-
-app.listen(3000);
+app.listen(5000);
 
 module.exports = app;
