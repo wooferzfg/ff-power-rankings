@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 /**
- * @api{get} /leagues GetLeaguesForUser
+ * @api{get} /user/leagues GetLeaguesForUser
  * @apiGroup User
  * 
  * @apiSuccess {String} league_key The key for a league.
