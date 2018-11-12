@@ -1,9 +1,21 @@
 const express = require('express');
 const router = express.Router();
 
+/**
+ * @api{get} /league/:league_key/settings GetLeagueSettings
+ * @apiGroup League
+ * 
+ * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
+ * 
+ * @apiSuccess {String} name The name of the league.
+ * @apiSuccess {String} season The year/season that the league was a part of.
+ * @apiSuccess {Number} num_teams The total number of teams in the league.
+ * @apiSuccess {Number} current_week The current week for the league if it is in progress.
+ * @apiSuccess {Number} total_weeks The total number of weeks in the league's regular season.
+ */
 router.get('/:leagueKey/settings', function (req, res) {
     var yf = req.app.yf;
-    var leagueKey = req.params.leagueKey;
+    var leagueKey = req.params.league_key;
 
     yf.league.settings(
         leagueKey,
@@ -27,9 +39,19 @@ function parseLeagueResult(res, err, data) {
     }
 }
 
+/**
+ * @api{get} /league/:league_key/teams GetLeagueTeams
+ * @apiGroup League
+ * 
+ * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
+ * 
+ * @apiSuccess {String} team_id The id of the team within the league.
+ * @apiSuccess {String} name The name of the team.
+ * @apiSuccess {String} logo_url The url of the team's logo.
+ */
 router.get('/:leagueKey/teams', function (req, res) {
     var yf = req.app.yf;
-    var leagueKey = req.params.leagueKey;
+    var leagueKey = req.params.league_key;
 
     yf.league.teams(
         leagueKey,

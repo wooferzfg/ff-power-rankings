@@ -1,9 +1,19 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/:leagueKey/:week', function (req, res) {
+/**
+ * @api{get} /scores/:league_key/:week GetScoresForWeek
+ * @apiGroup Scores
+ * 
+ * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
+ * @apiParam {String} week The week number to get scores for. Should be in the form "5".
+ * 
+ * @apiSuccess {String} team_id The id of the team within the league.
+ * @apiSuccess {Number} points The number of points that the team scored during the given week.
+ */
+router.get('/:league_key/:week', function (req, res) {
     var yf = req.app.yf;
-    var leagueKey = req.params.leagueKey;
+    var leagueKey = req.params.league_key;
     var week = req.params.week;
 
     yf.league.scoreboard(
@@ -26,7 +36,7 @@ function parseScoresResult(res, err, data) {
                 var teamData = teams[j];
                 var teamResult = {};
                 teamResult["team_id"] = teamData["team_id"];
-                teamResult["points"] = teamData["points"]["total"];
+                teamResult["points"] = Number(teamData["points"]["total"]);
                 result.push(teamResult);
             }
         }

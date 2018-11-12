@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
+/**
+ * @api{get} /leagues GetLeaguesForUser
+ * @apiGroup User
+ * 
+ * @apiSuccess {String} league_key The key for a league.
+ * @apiSuccess {String} name The name of the league.
+ * @apiSuccess {String} season The year/season that the league was a part of.
+ */
 router.get('/leagues', function (req, res) {
     var yf = req.app.yf;
 
