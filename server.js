@@ -14,11 +14,9 @@ var APP_KEY = tokens.yahooConsumerKey();
 var APP_SECRET = tokens.yahooConsumerSecret();
 
 var userRoute = require('./routes/user');
-var scores = require('./routes/scores');
 
 var app = express();
 app.use('/user', userRoute);
-app.use('/scores', scores);
 
 passport.serializeUser(function (user, done) {
     done(null, user);
