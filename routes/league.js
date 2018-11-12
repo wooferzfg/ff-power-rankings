@@ -32,7 +32,7 @@ function parseLeagueResult(res, err, data) {
         result["name"] = data["name"];
         result["season"] = data["season"];
         result["num_teams"] = data["num_teams"];
-        result["current_week"] = data["current_week"];
+        result["current_week"] = parseInt(data["current_week"]);
         result["total_weeks"] = parseInt(data["settings"]["playoff_start_week"]) - 1;
 
         res.send(result);

@@ -25,7 +25,8 @@ function parseGamesResult(yf, res, err, data) {
         var gamesData = data["games"];
         for (var i = 0; i < gamesData.length; i++) {
             var curGameData = gamesData[i];
-            if (curGameData["code"] == "nfl") {
+            var curSeason = parseInt(curGameData["season"])
+            if (curSeason >= 2013 && curGameData["code"] == "nfl") {
                 games.push(curGameData["game_key"]);
             }
         }
@@ -57,9 +58,6 @@ function parseLeaguesResult(res, err, data) {
                 result.push(leagueResult);
             }
         }
-        result.sort(function (a, b) {
-            return a["season"] - b["season"];
-        })
 
         res.send(result);
     }
