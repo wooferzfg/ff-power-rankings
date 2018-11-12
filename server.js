@@ -9,6 +9,7 @@ var bodyParser = require("body-parser");
 var session = require("express-session");
 var OAuth2Strategy = require("passport-oauth2");
 var YahooFantasy = require("yahoo-fantasy");
+var cors = require('cors');
 
 var APP_KEY = tokens.yahooConsumerKey();
 var APP_SECRET = tokens.yahooConsumerSecret();
@@ -18,6 +19,7 @@ var leagueRoute = require('./routes/league');
 var scoresRoute = require('./routes/scores');
 
 var app = express();
+app.use(cors());
 app.use('/user', userRoute);
 app.use('/league', leagueRoute);
 app.use('/scores', scoresRoute);
