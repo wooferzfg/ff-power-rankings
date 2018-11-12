@@ -8,7 +8,7 @@ const router = express.Router();
  * 
  * @apiSuccess {String} league_key The key for a league.
  * @apiSuccess {String} name The name of the league.
- * @apiSuccess {String} season The year/season that the league was a part of.
+ * @apiSuccess {Number} season The year/season that the league was a part of.
  */
 router.get('/leagues', function (req, res) {
     var yf = req.app.yf;
@@ -55,7 +55,7 @@ function parseLeaguesResult(res, err, data) {
                 var leagueResult = {};
                 leagueResult["league_key"] = curLeagueData["league_key"];
                 leagueResult["name"] = curLeagueData["name"];
-                leagueResult["season"] = curLeagueData["season"];
+                leagueResult["season"] = parseInt(curLeagueData["season"]);
                 result.push(leagueResult);
             }
         }
