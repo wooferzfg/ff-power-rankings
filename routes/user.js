@@ -20,7 +20,7 @@ router.get('/leagues', function (req, res) {
 
 function parseGamesResult(yf, res, err, data) {
     if (err) {
-        res.send(err);
+        res.status(400).json(err);
     } else {
         var games = [];
         var gamesData = data["games"];
@@ -42,7 +42,7 @@ function parseGamesResult(yf, res, err, data) {
 
 function parseLeaguesResult(res, err, data) {
     if (err) {
-        res.send(err);
+        res.status(400).json(err);
     } else {
         var result = [];
 
@@ -60,7 +60,7 @@ function parseLeaguesResult(res, err, data) {
             }
         }
 
-        res.send(result);
+        res.status(200).json(result);
     }
 }
 

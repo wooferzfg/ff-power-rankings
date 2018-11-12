@@ -36,7 +36,7 @@ function getWeeksString(upToWeek) {
 
 function parseScoresResult(res, err, data) {
     if (err) {
-        res.send(err);
+        res.status(400).json(err);
     } else {
         var result = [];
 
@@ -53,7 +53,7 @@ function parseScoresResult(res, err, data) {
             }
         }
 
-        res.send(result);
+        res.status(200).json(result);
     }
 }
 

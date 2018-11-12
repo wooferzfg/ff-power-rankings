@@ -26,7 +26,7 @@ router.get('/:league_key/settings', function (req, res) {
 
 function parseLeagueResult(res, err, data) {
     if (err) {
-        res.send(err);
+        res.status(400).json(err);
     } else {
         var result = {};
 
@@ -36,7 +36,7 @@ function parseLeagueResult(res, err, data) {
         result["current_week"] = parseInt(data["current_week"]);
         result["total_weeks"] = parseInt(data["settings"]["playoff_start_week"]) - 1;
 
-        res.send(result);
+        res.status(200).json(result);
     }
 }
 
@@ -63,7 +63,7 @@ router.get('/:league_key/teams', function (req, res) {
 
 function parseTeamsResult(res, err, data) {
     if (err) {
-        res.send(err);
+        res.status(400).json(err);
     } else {
         var result = [];
 
@@ -77,7 +77,7 @@ function parseTeamsResult(res, err, data) {
             result.push(teamResult);
         }
 
-        res.send(result);
+        res.status(200).json(result);
     }
 }
 
