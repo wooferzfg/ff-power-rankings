@@ -4,6 +4,7 @@ const router = express.Router();
 /**
  * @api{get} /league/:league_key/settings GetLeagueSettings
  * @apiGroup League
+ * @apiVersion 1.0.0
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
  * 
@@ -42,6 +43,7 @@ function parseLeagueResult(res, err, data) {
 /**
  * @api{get} /league/:league_key/teams GetLeagueTeams
  * @apiGroup League
+ * @apiVersion 1.0.0
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
  * 

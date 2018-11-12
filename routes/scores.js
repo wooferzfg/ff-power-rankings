@@ -4,6 +4,7 @@ const router = express.Router();
 /**
  * @api{get} /scores/:league_key/:week GetScoresForWeek
  * @apiGroup Scores
+ * @apiVersion 1.0.0
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
  * @apiParam {String} week The week number to get scores for. Should be in the form "5".

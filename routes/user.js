@@ -4,6 +4,7 @@ const router = express.Router();
 /**
  * @api{get} /user/leagues GetLeaguesForUser
  * @apiGroup User
+ * @apiVersion 1.0.0
  * 
  * @apiSuccess {String} league_key The key for a league.
  * @apiSuccess {String} name The name of the league.
