@@ -7,7 +7,7 @@ const router = express.Router();
  * @apiVersion 1.0.0
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
- * @apiParam {Number} week The last week number to get scores for. If the parameter is "5", scores for weeks 1 through 5 will be returned.
+ * @apiParam {Number} up_to_week The last week number to get scores for. If the parameter is "5", scores for weeks 1 through 5 will be returned.
  * 
  * @apiSuccess {String} team_id The id of the team within the league.
  * @apiSuccess {Number} week The week that the points were scored during.
