@@ -17,14 +17,20 @@ router.get('/:league_key/:up_to_week', function (req, res) {
     var yf = req.app.yf;
     var leagueKey = req.params.league_key;
     var upToWeek = parseInt(req.params.up_to_week);
+    getScores(yf, leagueKey, upToWeek, res, result => {
+        res.status(200).json(result);
+    });
+});
+
+function getScores(yf, leagueKey, upToWeek, res, callback) {
     var weeks = getWeeksString(upToWeek);
 
     yf.league.scoreboard(
         leagueKey,
         weeks,
-        (err, data) => parseScoresResult(res, err, data)
+        (err, data) => parseScoresResult(res, err, data, callback)
     );
-});
+}
 
 function getWeeksString(upToWeek) {
     var weeks = [];
@@ -34,7 +40,7 @@ function getWeeksString(upToWeek) {
     return weeks.join();
 }
 
-function parseScoresResult(res, err, data) {
+function parseScoresResult(res, err, data, callback) {
     if (err) {
         res.status(400).json(err);
     } else {
@@ -53,8 +59,9 @@ function parseScoresResult(res, err, data) {
             }
         }
 
-        res.status(200).json(result);
+        callback(result);
     }
 }
 
+router.getScores = getScores;
 module.exports = router;

@@ -1,28 +1,30 @@
-var tokens = require('./power-rankings/src/tokens.js');
-var express = require('express');
-var path = require("path");
-var passport = require('passport');
-var request = require("request");
-var logger = require("morgan");
-var cookieParser = require("cookie-parser");
-var bodyParser = require("body-parser");
-var session = require("express-session");
-var OAuth2Strategy = require("passport-oauth2");
-var YahooFantasy = require("yahoo-fantasy");
-var cors = require('cors');
+const tokens = require('./power-rankings/src/tokens.js');
+const express = require('express');
+const path = require("path");
+const passport = require('passport');
+const request = require("request");
+const logger = require("morgan");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const session = require("express-session");
+const OAuth2Strategy = require("passport-oauth2");
+const YahooFantasy = require("yahoo-fantasy");
+const cors = require('cors');
 
-var APP_KEY = tokens.yahooConsumerKey();
-var APP_SECRET = tokens.yahooConsumerSecret();
+const APP_KEY = tokens.yahooConsumerKey();
+const APP_SECRET = tokens.yahooConsumerSecret();
 
-var userRoute = require('./routes/user');
-var leagueRoute = require('./routes/league');
-var scoresRoute = require('./routes/scores');
+const userRoute = require('./routes/user');
+const leagueRoute = require('./routes/league');
+const scoresRoute = require('./routes/scores');
+const rankingsRoute = require('./routes/rankings');
 
 var app = express();
 app.use(cors());
 app.use('/user', userRoute);
 app.use('/league', leagueRoute);
 app.use('/scores', scoresRoute);
+app.use('/rankings', rankingsRoute);
 
 passport.serializeUser(function (user, done) {
     done(null, user);
