@@ -25,8 +25,22 @@ router.get('/:league_key/:week', function (req, res) {
     });
 });
 
+// based on historical data
 const HISTORICAL_MEAN = 90;
-const HISTORICAL_SD = 25;
+/**
+ * historical data has a standard deviation of 22
+ * inverse cdf with an area of 0.95 results in an sd of 43
+ * 
+ * most teams in the power rankings end up between 0.250 and 0.750
+ * inverse cdf with an area of 0.5 has a z-score of 0.674
+ * this gives us an sd = 43 / 0.674 = 64
+ * 
+ * 22^2*0.3 + historical_sd^2*0.7 = 64^2
+ * historical_sd = 75
+ * 
+ * historical_variance = 75^2 = 5625
+ */
+const HISTORICAL_VARIANCE = 5625;
 
 function powerRankings(week, res, data) {
     var curWeek = calculateRankings(week, data);
@@ -80,8 +94,8 @@ function calculateRankings(maxWeek, data) {
     const curMean = math.mean(allScores);
     const curSD = math.std(allScores);
     const mean = interpolate(curMean, HISTORICAL_MEAN, priorRatio);
-    const sd = interpolate(curSD, HISTORICAL_SD, priorRatio);
-    var distribution = gaussian(mean, sd * sd);
+    const variance = interpolate(curSD * curSD, HISTORICAL_VARIANCE, priorRatio);
+    var distribution = gaussian(mean, variance);
 
     var result = {};
     for (var i = 1; i <= maxWeek; i++) {
