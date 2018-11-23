@@ -27,20 +27,21 @@ router.get('/:league_key/:week', function (req, res) {
 
 // based on historical data
 const HISTORICAL_MEAN = 90;
+
 /**
  * historical data has a standard deviation of 22
- * inverse cdf with an area of 0.95 results in an sd of 43
+ * inverse cdf with an area of 0.975 results in an sd of 49
  * 
  * most teams in the power rankings end up between 0.250 and 0.750
  * inverse cdf with an area of 0.5 has a z-score of 0.674
- * this gives us an sd = 43 / 0.674 = 64
+ * this gives us an sd = 49 / 0.674 = 73
  * 
- * 22^2*0.3 + historical_sd^2*0.7 = 64^2
- * historical_sd = 75
+ * 22^2*0.667 + historical_sd^2*0.333 = 73^2
+ * historical_sd = 123
  * 
- * historical_variance = 75^2 = 5625
+ * historical_variance = 123^2 = 15129
  */
-const HISTORICAL_VARIANCE = 5625;
+const HISTORICAL_VARIANCE = 15129;
 
 function powerRankings(week, res, data) {
     var curWeek = calculateRankings(week, data);
@@ -90,12 +91,13 @@ function calculateRankings(maxWeek, data) {
         }
     }
 
-    const priorRatio = getPriorRatio(maxWeek);
+    const meanPriorRatio = getMeanPriorRatio(maxWeek);
+    const variancePriorRatio = getVariancePriorRatio(maxWeek);
     const curMean = math.mean(allScores);
     const curSD = math.std(allScores);
-    const mean = interpolate(curMean, HISTORICAL_MEAN, priorRatio);
-    const variance = interpolate(curSD * curSD, HISTORICAL_VARIANCE, priorRatio);
-    var distribution = gaussian(mean, variance);
+    const mean = interpolate(curMean, HISTORICAL_MEAN, meanPriorRatio);
+    const variance = interpolate(curSD * curSD, HISTORICAL_VARIANCE, variancePriorRatio);
+    const distribution = gaussian(mean, variance);
 
     var result = {};
     for (var i = 1; i <= maxWeek; i++) {
@@ -125,15 +127,25 @@ function calculateRankings(maxWeek, data) {
     return sortedResult;
 }
 
-function getPriorRatio(week) {
+function getMeanPriorRatio(week) {
+    // 0.7, 0.49, 0.343, etc.
     return math.pow(0.7, week);
 }
 
+function getVariancePriorRatio(week) {
+    // 0.333, 0.125, 0.067, etc.
+    return 1 / ((week + 2) * week);
+}
+
 function interpolate(current, historical, priorRatio) {
+    // linear interpolation between current and historical
+    // priorRatio is between 0 and 1
+    // 0 means to only use current, 1 means to only use historical
     return current * (1 - priorRatio) + historical * priorRatio;
 }
 
 function getWeekRatio(week, totalWeeks) {
+    // the ratio of the week's weight to the total weight of all weeks
     var totalWeight = 0;
     for (var i = 1; i <= totalWeeks; i++) {
         var curWeight = getWeekWeight(i, totalWeeks);
