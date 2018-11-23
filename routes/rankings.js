@@ -26,7 +26,7 @@ router.get('/:league_key/:week', function (req, res) {
 });
 
 // based on historical data
-const HISTORICAL_MEAN = 90;
+const PRIOR_MEAN = 90;
 
 /**
  * historical data has a standard deviation of 22
@@ -36,12 +36,12 @@ const HISTORICAL_MEAN = 90;
  * inverse cdf with an area of 0.5 has a z-score of 0.674
  * this gives us an sd = 49 / 0.674 = 73
  * 
- * 22^2*0.667 + historical_sd^2*0.333 = 73^2
- * historical_sd = 123
+ * 22^2*0.667 + prior_sd^2*0.333 = 73^2
+ * prior_sd = 123
  * 
- * historical_variance = 123^2 = 15129
+ * prior_variance = 123^2 = 15129
  */
-const HISTORICAL_VARIANCE = 15129;
+const PRIOR_VARIANCE = 15129;
 
 function powerRankings(week, res, data) {
     var curWeek = calculateRankings(week, data);
@@ -95,8 +95,8 @@ function calculateRankings(maxWeek, data) {
     const variancePriorRatio = getVariancePriorRatio(maxWeek);
     const curMean = math.mean(allScores);
     const curSD = math.std(allScores);
-    const mean = interpolate(curMean, HISTORICAL_MEAN, meanPriorRatio);
-    const variance = interpolate(curSD * curSD, HISTORICAL_VARIANCE, variancePriorRatio);
+    const mean = interpolate(curMean, PRIOR_MEAN, meanPriorRatio);
+    const variance = interpolate(curSD * curSD, PRIOR_VARIANCE, variancePriorRatio);
     const distribution = gaussian(mean, variance);
 
     var result = {};
@@ -137,11 +137,11 @@ function getVariancePriorRatio(week) {
     return 1 / ((week + 2) * week);
 }
 
-function interpolate(current, historical, priorRatio) {
-    // linear interpolation between current and historical
+function interpolate(current, prior, priorRatio) {
+    // linear interpolation between current and prior
     // priorRatio is between 0 and 1
-    // 0 means to only use current, 1 means to only use historical
-    return current * (1 - priorRatio) + historical * priorRatio;
+    // 0 means to only use current, 1 means to only use prior
+    return current * (1 - priorRatio) + prior * priorRatio;
 }
 
 function getWeekRatio(week, totalWeeks) {
