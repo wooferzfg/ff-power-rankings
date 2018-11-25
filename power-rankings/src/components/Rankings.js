@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../styles/Rankings.css';
 import axios from 'axios';
+import { tmpdir } from 'os';
 var tokens = require('../tokens.js');
 
 class Rankings extends Component {
@@ -70,37 +71,62 @@ class Rankings extends Component {
         });
     }
 
+    formatWinPercentage(winPercentage) {
+        return winPercentage.toFixed(3).substring(1);
+    }
+
     render() {
         var weeks = [];
         for (var i = 1; i <= this.state.settings.total_weeks; i++) {
             weeks.push(i);
         }
 
-        return <div>
-            <a href={"/leagues"} className={"button"}>Back to Leagues</a>
-            <div className={"weeks-list"}>
-                <div className={"week-label"}>Week:</div>
-                {
-                    weeks.map(week =>
-                        <div className={"week" + (week == this.state.week ? " current-week" : "")}>
-                            <a href={"/rankings/" + this.state.league_key + "/" + week}>{week}</a>
-                        </div>
-                    )
-                }
-            </div>
+        return <div className={"content-container"}>
+            <h1>Rankings</h1>
             <div>
+                <a href={"/leagues"} className={"button"}>Back to Leagues</a>
+                <div className={"weeks-list"}>
+                    <div className={"week-label"}>Week:</div>
+                    {
+                        weeks.map(week =>
+                            <div className={"week" + (week == this.state.week ? " current-week" : "")}>
+                                <a href={"/rankings/" + this.state.league_key + "/" + week}>{week}</a>
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
+            <table className={"rankings"}>
+                <tr className={"table-header"}>
+                    <td>Rank</td>
+                    <td colSpan={"2"}>Team</td>
+                    <td>Win%</td>
+                    <td colSpan={"2"}>Change</td>
+                </tr>
                 {
-                    this.state.rankings.map(team => {
+                    this.state.rankings.map((team, index) => {
                         var teamInfo = this.state.teams[team.team_id];
-                        return <div>
-                            <img src={teamInfo.logo_url}></img>
-                            <div>{teamInfo.name}</div>
-                            <div>{team.win_percentage}</div>
-                            <div>{team.change}</div>
-                        </div>;
+                        return <tr>
+                            <td className={"rank"}>{index + 1}</td>
+                            <td><img className={"team-logo"} src={teamInfo.logo_url}></img></td>
+                            <td className={"team-name"}>{teamInfo.name}</td>
+                            <td className={"win-percentage"}>{this.formatWinPercentage(team.win_percentage)}</td>
+                            {team.change == 0 ?
+                                <td className={"change-dash"} colspan={"2"}>-</td>
+                                : <>
+                                    <td>{team.change > 0 ?
+                                        <img className={"change-arrow"} src="/images/uparrow.png"></img>
+                                        :
+                                        <img className={"change-arrow"} src="/images/downarrow.png"></img>
+                                    }
+                                    </td>
+                                    <td className={"change-text"}>{Math.abs(team.change)}</td>
+                                </>
+                            }
+                        </tr>;
                     })
                 }
-            </div>
+            </table>
         </div>
     }
 }
