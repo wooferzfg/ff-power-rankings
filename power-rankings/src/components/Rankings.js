@@ -89,7 +89,7 @@ class Rankings extends Component {
                     <div className={"week-label"}>Week:</div>
                     {
                         weeks.map(week =>
-                            <div className={"week" + (week == this.state.week ? " current-week" : "")}>
+                            <div className={"week" + (week == this.state.week ? " current-week" : "") + (week > this.state.settings.current_week ? " disabled" : "")}>
                                 <a href={"/rankings/" + this.state.league_key + "/" + week}>{week}</a>
                             </div>
                         )

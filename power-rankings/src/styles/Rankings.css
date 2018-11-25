@@ -7,8 +7,13 @@
     background-color: #eeeeee;
 }
 
-.current-week {
+.week.current-week {
     background-color: #fffd94;
+}
+
+.week.disabled {
+    color: #888888;
+    pointer-events: none;
 }
 
 .week-label {
