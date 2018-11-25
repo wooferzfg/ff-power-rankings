@@ -26,6 +26,7 @@
   "devDependencies": {
     "apidoc": "^0.17.6",
     "chai": "^4.2.0",
+    "chai-almost": "^1.0.1",
     "chai-http": "^4.2.0",
     "mocha": "^5.2.0"
   }
