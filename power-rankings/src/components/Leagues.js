@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../styles/Leagues.css';
 import axios from 'axios';
 var tokens = require('../tokens.js');
 

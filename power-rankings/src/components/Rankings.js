@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../styles/Rankings.css';
 import axios from 'axios';
 var tokens = require('../tokens.js');
 

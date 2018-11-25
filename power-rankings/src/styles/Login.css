@@ -1,4 +1,11 @@
-.button {
+.login-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.login-button {
+    padding: 5px;
     text-decoration: none;
     color: initial;
     appearance: button;
