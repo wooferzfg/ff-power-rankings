@@ -66,10 +66,7 @@
     padding-right: 50px;
 }
 
-.win-percentage {
-    text-align: right;
-}
-
+.win-percentage,
 .change-dash {
     text-align: center;
 }
