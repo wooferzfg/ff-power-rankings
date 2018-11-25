@@ -107,13 +107,9 @@ app.get(
     "/auth/callback",
     passport.authenticate("oauth2", { failureRedirect: "/login" }),
     function (req, res) {
-        res.redirect(tokens.clientUrl() + "/rankings");
+        res.redirect(tokens.clientUrl() + "/leagues");
     }
 );
-
-app.get('/login', function (req, res) {
-    res.render('login', { user: req.user });
-});
 
 app.listen(5000);
 
