@@ -17,12 +17,17 @@ class Leagues extends Component {
     }
 
     render() {
-        return <div>{this.state.leagues.map(league =>
-            <a href={"/rankings/" + league.league_key}>
-                <div>{league.name}</div>
-                <div>{league.season}</div>
-            </a>
-        )}</div>
+        return <div className={"content-container"}>
+            <h1>Leagues</h1>
+            <div className={"leagues-list"}>{this.state.leagues.map((league, index) =>
+                <div className={"league"}>
+                    <a href={"/rankings/" + league.league_key}>
+                        <div className={"season"}>{league.season}</div>
+                        <div className={"name"}>{league.name}</div>
+                    </a>
+                </div>
+            )}</div>
+        </div>
     }
 }
 

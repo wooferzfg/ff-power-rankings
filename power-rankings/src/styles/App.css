@@ -16,3 +16,21 @@ body {
     padding: 20px;
     margin-top: 20px;
 }
+
+.content-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button {
+    padding: 5px;
+    text-decoration: none;
+    color: initial;
+    appearance: button;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}

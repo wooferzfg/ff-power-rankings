@@ -1,0 +1,22 @@
+.week {
+    padding: 5px;
+    display: inline-block;
+}
+
+.week:hover {
+    background-color: #eeeeee;
+}
+
+.current-week {
+    background-color: #fffd94;
+}
+
+.week-label {
+    display: inline-block;
+    padding-right: 5px;
+}
+
+.weeks-list {
+    display: inline-block;
+    padding-left: 30px;
+}

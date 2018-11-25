@@ -5,9 +5,9 @@ var tokens = require('../tokens.js');
 
 class Rankings extends Component {
     state = {
-        week: 1,
+        week: 0,
         settings: {
-            total_weeks: 1
+            total_weeks: 0
         },
         league_key: this.props.match.params.league_key,
         teams: {},
@@ -77,11 +77,14 @@ class Rankings extends Component {
         }
 
         return <div>
-            <a href={"/leagues"}>Leagues</a>
-            <div>
+            <a href={"/leagues"} className={"button"}>Back to Leagues</a>
+            <div className={"weeks-list"}>
+                <div className={"week-label"}>Week:</div>
                 {
                     weeks.map(week =>
-                        <a href={"/rankings/" + this.state.league_key + "/" + week}>{week}</a>
+                        <div className={"week" + (week == this.state.week ? " current-week" : "")}>
+                            <a href={"/rankings/" + this.state.league_key + "/" + week}>{week}</a>
+                        </div>
                     )
                 }
             </div>
