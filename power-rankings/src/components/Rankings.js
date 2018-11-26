@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../styles/Rankings.css';
 import axios from 'axios';
-import { tmpdir } from 'os';
 var tokens = require('../tokens.js');
 
 class Rankings extends Component {
