@@ -99,7 +99,7 @@ class Rankings extends Component {
                 <tr className={"table-header"}>
                     <td>Rank</td>
                     <td colSpan={"2"}>Team</td>
-                    <td>Win%</td>
+                    <td>Pct</td>
                     <td colSpan={"2"}>Change</td>
                 </tr>
                 {
