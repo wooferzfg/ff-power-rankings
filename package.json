@@ -14,13 +14,11 @@
     "cors": "^2.8.5",
     "ejs": "^2.6.1",
     "express": "^4.13.4",
-    "express-session": "^1.15.6",
     "gaussian": "^1.1.0",
     "mathjs": "^5.2.3",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-oauth2": "^1.4.0",
-    "path": "^0.12.7",
     "yahoo-fantasy": "^3.1.0"
   },
   "devDependencies": {
