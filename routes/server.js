@@ -1,4 +1,4 @@
-const tokens = require('./power-rankings/src/tokens.js');
+const tokens = require('../power-rankings/src/tokens.js');
 const express = require('express');
 const passport = require('passport');
 const request = require("request");
@@ -12,11 +12,11 @@ const cors = require('cors');
 const APP_KEY = tokens.yahooConsumerKey();
 const APP_SECRET = tokens.yahooConsumerSecret();
 
-const authRoute = require('./routes/auth');
-const userRoute = require('./routes/user');
-const leagueRoute = require('./routes/league');
-const scoresRoute = require('./routes/scores');
-const rankingsRoute = require('./routes/rankings');
+const authRoute = require('./auth');
+const userRoute = require('./user');
+const leagueRoute = require('./league');
+const scoresRoute = require('./scores');
+const rankingsRoute = require('./rankings');
 
 var app = express();
 app.use(cors());
