@@ -20,8 +20,33 @@ router.get('/:league_key/:week', function (req, res) {
     var yf = req.app.yf;
     var leagueKey = req.params.league_key;
     var week = parseInt(req.params.week);
-    scores.getScores(yf, leagueKey, week, res, result => {
-        powerRankings(week, res, result);
+    scores.getScores(yf, leagueKey, week, res, data => {
+        powerRankings(week, res, data);
+    });
+});
+
+/**
+ * @api{get} /rankings/:league_key/:week/all GetAllRankingsUpToWeek
+ * @apiGroup Rankings
+ * @apiVersion 1.0.0
+ * 
+ * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
+ * @apiParam {Number} week The last week number to get rankings for. If the parameter is "5", there will be rankings for weeks 1 through 5.
+ * 
+ * @apiSuccess {String} team_id The id of the team within the league.
+ * @apiSuccess {Number} win_percentage The weighted win percentage based on the power rankings formula.
+ */
+router.get('/:league_key/:week/all', function (req, res) {
+    var yf = req.app.yf;
+    var leagueKey = req.params.league_key;
+    var week = parseInt(req.params.week);
+    scores.getScores(yf, leagueKey, week, res, data => {
+        var result = [];
+        for (var i = 1; i <= week; i++) {
+            var curWeek = calculateRankings(i, data);
+            result.push(curWeek);
+        }
+        res.status(200).send(result);
     });
 });
 
