@@ -16,7 +16,7 @@ class App extends Component {
                             <Switch>
                                 <Route exact path="/Leagues" component={Leagues} />
                                 <Route path="/Rankings/:league_key/:week?" component={Rankings} />
-                                <Route exact path="/Login" component={Login} />
+                                <Route exact path="/" component={Login} />
                             </Switch>
                         </div>
                     </BrowserRouter>
