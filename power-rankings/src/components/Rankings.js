@@ -82,7 +82,7 @@ class Rankings extends Component {
         }
 
         return <div className={"content-container"}>
-            <Navigation league_key={this.state.league_key} />
+            <Navigation league_key={this.state.league_key} selected={"Rankings"} />
             <h1>Rankings</h1>
             <div className={"weeks-list"}>
                 <div className={"week-label"}>Week:</div>

@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './components/Login';
 import Leagues from './components/Leagues';
 import Rankings from './components/Rankings';
+import Graph from './components/Graph';
 
 class App extends Component {
     render() {
@@ -16,6 +17,7 @@ class App extends Component {
                             <Switch>
                                 <Route exact path="/Leagues" component={Leagues} />
                                 <Route path="/Rankings/:league_key/:week?" component={Rankings} />
+                                <Route path="/Graph/:league_key" component={Graph} />
                                 <Route exact path="/" component={Login} />
                             </Switch>
                         </div>
