@@ -1,18 +1,21 @@
 .league {
     padding: 5px;
-    border-top: 1px solid black;
+    border-top: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
 }
 
 .leagues-list {
     width: 400px;
+    background-image: linear-gradient(to right, #fafafa, #eeeeee);
 }
 
 .league:hover {
-    background-color: #EEEEEE;
+    background-color: white;
 }
 
-.league:first-child {
-    border-top-style: none;
+.league:last-child {
+    border-bottom: 1px solid #cccccc;
 }
 
 .season {

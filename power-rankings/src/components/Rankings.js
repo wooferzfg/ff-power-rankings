@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Navigation from './Navigation';
 import '../styles/Rankings.css';
 import axios from 'axios';
 var tokens = require('../tokens.js');
@@ -81,50 +82,50 @@ class Rankings extends Component {
         }
 
         return <div className={"content-container"}>
+            <Navigation league_key={this.state.league_key} />
             <h1>Rankings</h1>
-            <div>
-                <a href={"/leagues"} className={"button"}>Back to Leagues</a>
-                <div className={"weeks-list"}>
-                    <div className={"week-label"}>Week:</div>
-                    {
-                        weeks.map(week =>
-                            <div className={"week" + (week == this.state.week ? " current-week" : "") + (week > this.state.settings.current_week ? " disabled" : "")}>
-                                <a href={"/rankings/" + this.state.league_key + "/" + week}>{week}</a>
-                            </div>
-                        )
-                    }
-                </div>
+            <div className={"weeks-list"}>
+                <div className={"week-label"}>Week:</div>
+                {
+                    weeks.map(week =>
+                        <div key={week} className={"week" + (week == this.state.week ? " current-week" : "") + (week > this.state.settings.current_week ? " disabled" : "")}>
+                            <a href={"/rankings/" + this.state.league_key + "/" + week}>{week}</a>
+                        </div>
+                    )
+                }
             </div>
             <table className={"rankings"}>
-                <tr className={"table-header"}>
-                    <td>Rank</td>
-                    <td colSpan={"2"}>Team</td>
-                    <td>Pct</td>
-                    <td colSpan={"2"}>Change</td>
-                </tr>
-                {
-                    this.state.rankings.map((team, index) => {
-                        var teamInfo = this.state.teams[team.team_id];
-                        return <tr>
-                            <td className={"rank"}>{index + 1}</td>
-                            <td><img className={"team-logo"} src={teamInfo.logo_url}></img></td>
-                            <td className={"team-name"}>{teamInfo.name}</td>
-                            <td className={"win-percentage"}>{this.formatWinPercentage(team.win_percentage)}</td>
-                            {team.change == 0 ?
-                                <td className={"change-dash"} colspan={"2"}>-</td>
-                                : <>
-                                    <td>{team.change > 0 ?
-                                        <img className={"change-arrow"} src="/images/uparrow.png"></img>
-                                        :
-                                        <img className={"change-arrow"} src="/images/downarrow.png"></img>
-                                    }
-                                    </td>
-                                    <td className={"change-text"}>{Math.abs(team.change)}</td>
-                                </>
-                            }
-                        </tr>;
-                    })
-                }
+                <tbody>
+                    <tr className={"table-header"}>
+                        <td>Rank</td>
+                        <td colSpan={"2"}>Team</td>
+                        <td>Pct</td>
+                        <td colSpan={"2"}>Change</td>
+                    </tr>
+                    {
+                        this.state.rankings.map((team, index) => {
+                            var teamInfo = this.state.teams[team.team_id];
+                            return <tr key={index}>
+                                <td className={"rank"}>{index + 1}</td>
+                                <td><img className={"team-logo"} src={teamInfo.logo_url}></img></td>
+                                <td className={"team-name"}>{teamInfo.name}</td>
+                                <td className={"win-percentage"}>{this.formatWinPercentage(team.win_percentage)}</td>
+                                {team.change == 0 ?
+                                    <td className={"change-dash"} colSpan={"2"}>-</td>
+                                    : <>
+                                        <td>{team.change > 0 ?
+                                            <img className={"change-arrow"} src="/images/uparrow.png"></img>
+                                            :
+                                            <img className={"change-arrow"} src="/images/downarrow.png"></img>
+                                        }
+                                        </td>
+                                        <td className={"change-text"}>{Math.abs(team.change)}</td>
+                                    </>
+                                }
+                            </tr>;
+                        })
+                    }
+                </tbody>
             </table>
         </div>
     }

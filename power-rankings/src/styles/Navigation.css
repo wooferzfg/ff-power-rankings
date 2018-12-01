@@ -1,0 +1,25 @@
+.nav-bar .button {
+    margin-right: 10px;
+}
+
+.nav-bar .button:last-child {
+    margin-right: 0;
+}
+
+.nav-bar {
+    position: relative;
+    background-color: #eeeeee;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    width: 100%;
+    border-bottom: 1px solid #cccccc;
+}
+
+.nav-bar .leagues {
+    position: absolute;
+    left: 10px;
+}

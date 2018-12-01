@@ -13,7 +13,8 @@ body {
 .content {
     width: 1200px;
     background-color: white;
-    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 20px;
     margin-top: 20px;
 }
 
@@ -24,10 +25,17 @@ body {
 }
 
 .button {
-    padding: 5px;
+    padding: 10px;
+    min-width: 80px;
+    text-align: center;
     text-decoration: none;
-    color: initial;
-    appearance: button;
+    text-transform: uppercase;
+    border: 1px solid #cccccc;
+    background-color: #fafafa;
+}
+
+.button:hover {
+    border: 1px solid black;
 }
 
 a {
