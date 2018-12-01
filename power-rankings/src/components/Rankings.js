@@ -21,7 +21,7 @@ class Rankings extends Component {
     }
 
     loadSettings() {
-        axios.get(tokens.serverUrl() + "/league/" + this.state.league_key + "/settings?token=" + this.props.token).then(res => {
+        axios.get(`${tokens.serverUrl()}/league/${this.state.league_key}/settings?token=${this.props.token}`).then(res => {
             this.setState({
                 settings: res.data
             });
@@ -45,7 +45,7 @@ class Rankings extends Component {
     }
 
     loadTeams() {
-        axios.get(tokens.serverUrl() + "/league/" + this.state.league_key + "/teams?token=" + this.props.token).then(res => {
+        axios.get(`${tokens.serverUrl()}/league/${this.state.league_key}/teams?token=${this.props.token}`).then(res => {
             var teams = {};
             var data = res.data;
             for (var i = 0; i < data.length; i++) {
@@ -64,7 +64,7 @@ class Rankings extends Component {
     }
 
     loadRankings() {
-        axios.get(tokens.serverUrl() + "/rankings/" + this.state.league_key + "/" + this.state.week + "?token=" + this.props.token).then(res => {
+        axios.get(`${tokens.serverUrl()}/rankings/${this.state.league_key}/${this.state.week}?token=${this.props.token}`).then(res => {
             this.setState({
                 rankings: res.data
             });
@@ -88,8 +88,8 @@ class Rankings extends Component {
                 <div className={"week-label"}>Week:</div>
                 {
                     weeks.map(week =>
-                        <div key={week} className={"week" + (week == this.state.week ? " current-week" : "") + (week > this.state.settings.current_week ? " disabled" : "")}>
-                            <a href={"/rankings/" + this.state.league_key + "/" + week + "?token=" + this.props.token}>{week}</a>
+                        <div key={week} className={`week${(week === this.state.week ? " current-week" : "")}${(week > this.state.settings.current_week ? " disabled" : "")}`}>
+                            <a href={`/rankings/${this.state.league_key}/${week}?token=${this.props.token}`}>{week}</a>
                         </div>
                     )
                 }
@@ -110,7 +110,7 @@ class Rankings extends Component {
                                 <td><img className={"team-logo"} src={teamInfo.logo_url}></img></td>
                                 <td className={"team-name"}>{teamInfo.name}</td>
                                 <td className={"win-percentage"}>{this.formatWinPercentage(team.win_percentage)}</td>
-                                {team.change == 0 ?
+                                {team.change === 0 ?
                                     <td className={"change-dash"} colSpan={"2"}>-</td>
                                     : <>
                                         <td>{team.change > 0 ?

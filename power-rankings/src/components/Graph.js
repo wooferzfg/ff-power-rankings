@@ -24,7 +24,7 @@ class Graph extends Component {
     }
 
     loadSettings() {
-        axios.get(tokens.serverUrl() + "/league/" + this.state.league_key + "/settings?token=" + this.props.token).then(res => {
+        axios.get(`${tokens.serverUrl()}/league/${this.state.league_key}/settings?token=${this.props.token}`).then(res => {
             this.setState({
                 settings: res.data
             });
@@ -44,7 +44,7 @@ class Graph extends Component {
     }
 
     loadTeams() {
-        axios.get(tokens.serverUrl() + "/league/" + this.state.league_key + "/teams?token=" + this.props.token).then(res => {
+        axios.get(`${tokens.serverUrl()}/league/${this.state.league_key}/teams?token=${this.props.token}`).then(res => {
             var teams = {};
             var data = res.data;
             for (var i = 0; i < data.length; i++) {
@@ -62,7 +62,7 @@ class Graph extends Component {
     }
 
     loadRankings() {
-        axios.get(tokens.serverUrl() + "/rankings/" + this.state.league_key + "/" + this.state.week + "/all?token=" + this.props.token).then(res => {
+        axios.get(`${tokens.serverUrl()}/rankings/${this.state.league_key}/${this.state.week}/all?token=${this.props.token}`).then(res => {
             var result = [];
             var team_ids = [];
             var finalRankings = res.data[res.data.length - 1];
@@ -90,7 +90,7 @@ class Graph extends Component {
         var weekData = data[week - 1];
         for (var i = 0; i < weekData.length; i++) {
             var curData = weekData[i];
-            if (curData.team_id == team_id) {
+            if (curData.team_id === team_id) {
                 return curData.win_percentage;
             }
         }
