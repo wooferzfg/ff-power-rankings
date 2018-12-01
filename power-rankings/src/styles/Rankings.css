@@ -53,16 +53,22 @@
 }
 
 .rankings td {
-    border-bottom: 1px solid #bbbbbb;
-    border-top: 1px solid #bbbbbb;
+    border-bottom: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
+}
+
+.rankings tr {
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+}
+
+.rankings tr:first-child {
+    border-left-style: none;
+    border-right-style: none;
 }
 
 .rankings tr:first-child td {
     border-top-style: none;
-}
-
-.rankings tr:last-child td {
-    border-bottom-style: none;
 }
 
 .rank {
