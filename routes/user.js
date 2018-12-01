@@ -1,17 +1,20 @@
+const auth = require('./auth');
 const express = require('express');
 const router = express.Router();
 
 /**
- * @api{get} /user/leagues GetLeaguesForUser
+ * @api{get} /user/leagues?token=:token GetLeaguesForUser
  * @apiGroup User
  * @apiVersion 1.0.0
+ * 
+ * @apiParam {String} token The Yahoo API token.
  * 
  * @apiSuccess {String} league_key The key for a league.
  * @apiSuccess {String} name The name of the league.
  * @apiSuccess {Number} season The year/season that the league was a part of.
  */
 router.get('/leagues', function (req, res) {
-    var yf = req.app.yf;
+    var yf = auth.getYF(req.query.token);
 
     yf.user.games(
         (err, data) => parseGamesResult(yf, res, err, data)

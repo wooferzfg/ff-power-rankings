@@ -9,7 +9,7 @@ class Leagues extends Component {
     }
 
     componentWillMount() {
-        axios.get(tokens.serverUrl() + "/user/leagues").then(res => {
+        axios.get(tokens.serverUrl() + "/user/leagues?token=" + this.props.token).then(res => {
             this.setState({
                 leagues: res.data
             })
@@ -21,7 +21,7 @@ class Leagues extends Component {
             <h1>Leagues</h1>
             <div className={"leagues-list"}>{this.state.leagues.map((league, index) =>
                 <div className={"league"}>
-                    <a href={"/rankings/" + league.league_key}>
+                    <a href={"/rankings/" + league.league_key + "?token=" + this.props.token}>
                         <div className={"season"}>{league.season}</div>
                         <div className={"name"}>{league.name}</div>
                     </a>

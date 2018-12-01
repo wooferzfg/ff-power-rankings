@@ -1,16 +1,18 @@
 const scores = require('./scores');
+const auth = require('./auth');
 const express = require('express');
 const router = express.Router();
 const math = require('mathjs');
 const gaussian = require('gaussian');
 
 /**
- * @api{get} /rankings/:league_key/:week GetRankingsForWeek
+ * @api{get} /rankings/:league_key/:week?token=:token GetRankingsForWeek
  * @apiGroup Rankings
  * @apiVersion 1.0.0
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
  * @apiParam {Number} week The week number to get rankings for. If the parameter is "5", the rankings will include data from weeks 1 through 5.
+ * @apiParam {String} token The Yahoo API token.
  * 
  * @apiSuccess {String} team_id The id of the team within the league.
  * @apiSuccess {Number} win_percentage The weighted win percentage based on the power rankings formula.
@@ -26,18 +28,19 @@ router.get('/:league_key/:week', function (req, res) {
 });
 
 /**
- * @api{get} /rankings/:league_key/:week/all GetAllRankingsUpToWeek
+ * @api{get} /rankings/:league_key/:week/all?token=:token GetAllRankingsUpToWeek
  * @apiGroup Rankings
  * @apiVersion 1.0.0
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
  * @apiParam {Number} week The last week number to get rankings for. If the parameter is "5", there will be rankings for weeks 1 through 5.
+ * @apiParam {String} token The Yahoo API token.
  * 
  * @apiSuccess {String} team_id The id of the team within the league.
  * @apiSuccess {Number} win_percentage The weighted win percentage based on the power rankings formula.
  */
 router.get('/:league_key/:week/all', function (req, res) {
-    var yf = req.app.yf;
+    var yf = auth.getYF(req.query.token);
     var leagueKey = req.params.league_key;
     var week = parseInt(req.params.week);
     scores.getScores(yf, leagueKey, week, res, data => {

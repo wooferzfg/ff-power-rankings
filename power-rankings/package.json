@@ -5,6 +5,7 @@
   "dependencies": {
     "@nivo/line": "^0.51.6",
     "axios": "^0.18.0",
+    "query-string": "^6.2.0",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "react-router-dom": "^4.3.1",

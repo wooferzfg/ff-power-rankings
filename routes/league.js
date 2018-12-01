@@ -1,12 +1,14 @@
+const auth = require('./auth');
 const express = require('express');
 const router = express.Router();
 
 /**
- * @api{get} /league/:league_key/settings GetLeagueSettings
+ * @api{get} /league/:league_key/settings?token=:token GetLeagueSettings
  * @apiGroup League
  * @apiVersion 1.0.0
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
+ * @apiParam {String} token The Yahoo API token.
  * 
  * @apiSuccess {String} name The name of the league.
  * @apiSuccess {String} season The year/season that the league was a part of.
@@ -15,7 +17,7 @@ const router = express.Router();
  * @apiSuccess {Number} total_weeks The total number of weeks in the league's regular season.
  */
 router.get('/:league_key/settings', function (req, res) {
-    var yf = req.app.yf;
+    var yf = auth.getYF(req.query.token);
     var leagueKey = req.params.league_key;
 
     yf.league.settings(
@@ -41,18 +43,19 @@ function parseLeagueResult(res, err, data) {
 }
 
 /**
- * @api{get} /league/:league_key/teams GetLeagueTeams
+ * @api{get} /league/:league_key/teams?token=:token GetLeagueTeams
  * @apiGroup League
  * @apiVersion 1.0.0
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
+ * @apiParam {String} token The Yahoo API token.
  * 
  * @apiSuccess {String} team_id The id of the team within the league.
  * @apiSuccess {String} name The name of the team.
  * @apiSuccess {String} logo_url The url of the team's logo.
  */
 router.get('/:league_key/teams', function (req, res) {
-    var yf = req.app.yf;
+    var yf = auth.getYF(req.query.token);
     var leagueKey = req.params.league_key;
 
     yf.league.teams(

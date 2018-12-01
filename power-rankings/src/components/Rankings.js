@@ -21,7 +21,7 @@ class Rankings extends Component {
     }
 
     loadSettings() {
-        axios.get(tokens.serverUrl() + "/league/" + this.state.league_key + "/settings").then(res => {
+        axios.get(tokens.serverUrl() + "/league/" + this.state.league_key + "/settings?token=" + this.props.token).then(res => {
             this.setState({
                 settings: res.data
             });
@@ -45,7 +45,7 @@ class Rankings extends Component {
     }
 
     loadTeams() {
-        axios.get(tokens.serverUrl() + "/league/" + this.state.league_key + "/teams").then(res => {
+        axios.get(tokens.serverUrl() + "/league/" + this.state.league_key + "/teams?token=" + this.props.token).then(res => {
             var teams = {};
             var data = res.data;
             for (var i = 0; i < data.length; i++) {
@@ -64,7 +64,7 @@ class Rankings extends Component {
     }
 
     loadRankings() {
-        axios.get(tokens.serverUrl() + "/rankings/" + this.state.league_key + "/" + this.state.week).then(res => {
+        axios.get(tokens.serverUrl() + "/rankings/" + this.state.league_key + "/" + this.state.week + "?token=" + this.props.token).then(res => {
             this.setState({
                 rankings: res.data
             });
@@ -82,14 +82,14 @@ class Rankings extends Component {
         }
 
         return <div className={"content-container"}>
-            <Navigation league_key={this.state.league_key} selected={"Rankings"} />
+            <Navigation league_key={this.state.league_key} token={this.props.token} selected={"Rankings"} />
             <h1>Rankings</h1>
             <div className={"weeks-list"}>
                 <div className={"week-label"}>Week:</div>
                 {
                     weeks.map(week =>
                         <div key={week} className={"week" + (week == this.state.week ? " current-week" : "") + (week > this.state.settings.current_week ? " disabled" : "")}>
-                            <a href={"/rankings/" + this.state.league_key + "/" + week}>{week}</a>
+                            <a href={"/rankings/" + this.state.league_key + "/" + week + "?token=" + this.props.token}>{week}</a>
                         </div>
                     )
                 }
