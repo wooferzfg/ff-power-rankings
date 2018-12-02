@@ -213,4 +213,21 @@ describe('Rankings tests', function () {
                 done();
             });
     });
+
+    it("should show all rankings correctly", function (done) {
+        this.timeout(20000);
+        chai.request(server)
+            .get(`/rankings/${league}/4/all?token=${token}`)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('Array');
+                res.body.length.should.be.eql(4);
+                res.body[0].length.should.be.eql(12);
+                res.body.should.have.nested.property("[0].[0].team_id");
+                res.body.should.have.nested.property("[0].[0].win_percentage");
+
+                (err === null).should.equal(true);
+                done();
+            });
+    });
 });
