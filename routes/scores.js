@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 /**
- * @api{get} /scores/:league_key/:up_to_week?token=:token GetScoresForWeek
+ * @api{get} /scores/:league_key/:up_to_week?token=:token GetScoresUpToWeek
  * @apiGroup Scores
  * @apiVersion 1.0.0
  * 

@@ -9,7 +9,6 @@ class Graph extends Component {
     state = {
         week: 0,
         settings: {
-            total_weeks: 0,
             num_teams: 0,
             name: "",
             season: ""

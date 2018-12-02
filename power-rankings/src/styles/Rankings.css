@@ -1,27 +1,27 @@
-.week {
+.rankings .week {
     padding: 5px;
     display: inline-block;
 }
 
-.week:hover {
+.rankings .week:hover {
     background-color: #eeeeee;
 }
 
-.week.current-week {
+.rankings .week.current-week {
     background-color: #fffd94;
 }
 
-.week.disabled {
+.rankings .week.disabled {
     color: #888888;
     pointer-events: none;
 }
 
-.week-label {
+.rankings .week-label {
     display: inline-block;
     padding-right: 5px;
 }
 
-.weeks-list {
+.rankings .weeks-list {
     display: inline-block;
     padding-left: 30px;
 }
@@ -71,13 +71,13 @@
     border-top-style: none;
 }
 
-.rank {
+.rankings .rank {
     text-align: center;
     font-size: 1.3em;
     font-weight: bold;
 }
 
-.team-logo {
+.rankings .team-logo {
     width: 50px;
     height: 50px;
     padding-top: 3px;
@@ -88,17 +88,17 @@
     filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.2));
 }
 
-.team-name {
+.rankings .team-name {
     padding-right: 50px;
     padding-left: 5px;
 }
 
-.win-percentage,
-.change-dash {
+.rankings .win-percentage,
+.rankings .change-dash {
     text-align: center;
 }
 
-.change-arrow {
+.rankings .change-arrow {
     width: 20px;
     height: 20px;
     vertical-align: middle;
@@ -106,7 +106,7 @@
     filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.2));
 }
 
-.change-text {
+.rankings .change-text {
     text-align: left;
     padding-right: 15px;
 }
