@@ -7,6 +7,7 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.2));
 }
 
 .data td {
@@ -16,6 +17,7 @@
 .data tr:first-child td:first-child {
     border-left-style: none;
     border-top-style: none;
+    background-color: white;
 }
 
 .data .team-label {
@@ -38,6 +40,10 @@
 .data td {
     border: 1px solid #cccccc;
     text-align: center;
+}
+
+.data {
+    background-image: linear-gradient(to right, #fafafa, #eeeeee);
 }
 
 .data .score {
