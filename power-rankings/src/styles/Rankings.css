@@ -1,27 +1,27 @@
-.rankings .week {
+.weeks-list .week {
     padding: 5px;
     display: inline-block;
 }
 
-.rankings .week:hover {
+.weeks-list .week:hover {
     background-color: #eeeeee;
 }
 
-.rankings .week.current-week {
+.weeks-list .week.current-week {
     background-color: #fffd94;
 }
 
-.rankings .week.disabled {
+.weeks-list .week.disabled {
     color: #888888;
     pointer-events: none;
 }
 
-.rankings .week-label {
+.weeks-list .week-label {
     display: inline-block;
     padding-right: 5px;
 }
 
-.rankings .weeks-list {
+.weeks-list {
     display: inline-block;
     padding-left: 30px;
 }
