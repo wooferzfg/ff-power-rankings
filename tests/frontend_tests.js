@@ -17,17 +17,24 @@ function findButton(text) {
     });
 }
 
+function findByCSS(css, index) {
+    return driver.findElements(webdriver.By.css(css)).then(function (result) {
+        return result[index];
+    });
+}
+
 function logIn() {
     return driver.get('http://localhost:3000')
-        .then(() => driver.wait(findButton('Log In With Yahoo'), 2000))
+        .then(() => findButton('Log In With Yahoo'), 2000)
         .then(button => button.click())
-        .then(() => driver.wait(findButton('Agree'), 2000))
+        .then(() => findButton('Agree'), 2000)
         .then(button => button.click())
 }
 
-describe('Login', function () {
+describe('Front-end tests', function () {
+    this.timeout(60000);
+
     it('should show the correct page title', function (done) {
-        this.timeout(30000);
         driver.get('http://localhost:3000')
             .then(() => driver.getTitle())
             .then(title => title.should.equal("Yahoo Fantasy Football Power Rankings"))
@@ -36,8 +43,112 @@ describe('Login', function () {
     });
 
     it('should let you login', function (done) {
-        this.timeout(30000);
         logIn()
+            .then(() => driver.getCurrentUrl())
+            .then(url => url.should.include('/leagues'))
+            .then(() => done())
+            .catch(error => done(error));
+    });
+
+    it('should let you choose a league', function (done) {
+        logIn()
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.league a', 0))
+            .then(league => league.click())
+            .then(() => driver.getCurrentUrl())
+            .then(url => url.should.include('/rankings'))
+            .then(() => done())
+            .catch(error => done(error));
+    });
+
+    it('should show rankings', function (done) {
+        logIn()
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.league a', 0))
+            .then(league => league.click())
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.team-name', 0))
+            .then(team_name => team_name.getText())
+            .then(team_name => team_name.should.equal('Clown Question Bro'))
+            .then(() => findByCSS('.win-percentage', 0))
+            .then(win_percentage => win_percentage.getText())
+            .then(win_percentage => win_percentage.should.equal('.653'))
+            .then(() => done())
+            .catch(error => done(error));
+    });
+
+    it('should let you switch weeks', function (done) {
+        logIn()
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.league a', 0))
+            .then(league => league.click())
+            .then(() => driver.sleep(10000))
+            .then(() => findButton('1'))
+            .then(weekButton => weekButton.click())
+            .then(() => driver.sleep(8000))
+            .then(() => findByCSS('.team-name', 0))
+            .then(team_name => team_name.getText())
+            .then(team_name => team_name.should.equal('Kryptonite'))
+            .then(() => findByCSS('.win-percentage', 0))
+            .then(win_percentage => win_percentage.getText())
+            .then(win_percentage => win_percentage.should.equal('.733'))
+            .then(() => done())
+            .catch(error => done(error));
+    });
+
+    it('should let you switch to the graph view', function (done) {
+        logIn()
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.league a', 0))
+            .then(league => league.click())
+            .then(() => driver.sleep(2000))
+            .then(() => findButton('Graph'))
+            .then(graphButton => graphButton.click())
+            .then(() => driver.getCurrentUrl())
+            .then(url => url.should.include('/graph'))
+            .then(() => done())
+            .catch(error => done(error));
+    });
+
+    it('should let you go back to the rankings page', function (done) {
+        logIn()
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.league a', 0))
+            .then(league => league.click())
+            .then(() => driver.sleep(2000))
+            .then(() => findButton('Graph'))
+            .then(graphButton => graphButton.click())
+            .then(() => driver.sleep(2000))
+            .then(() => findButton('Rankings'))
+            .then(rankingsButton => rankingsButton.click())
+            .then(() => driver.getCurrentUrl())
+            .then(url => url.should.include('/rankings'))
+            .then(() => done())
+            .catch(error => done(error));
+    });
+
+    it('should let you switch to the data view', function (done) {
+        logIn()
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.league a', 0))
+            .then(league => league.click())
+            .then(() => driver.sleep(2000))
+            .then(() => findButton('Data'))
+            .then(dataButton => dataButton.click())
+            .then(() => driver.getCurrentUrl())
+            .then(url => url.should.include('/data'))
+            .then(() => done())
+            .catch(error => done(error));
+    });
+
+    it('should let you go back to the leagues page', function (done) {
+        logIn()
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.league a', 0))
+            .then(league => league.click())
+            .then(() => driver.sleep(2000))
+            .then(() => findButton('Back to Leagues'))
+            .then(leaguesButton => leaguesButton.click())
             .then(() => driver.getCurrentUrl())
             .then(url => url.should.include('/leagues'))
             .then(() => done())

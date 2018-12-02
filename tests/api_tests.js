@@ -14,8 +14,9 @@ var server = tokens.serverUrl();
 var league = "380.l.102172";
 
 describe('User tests', function () {
+    this.timeout(20000);
+
     it("should list all of a user's leagues", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/user/leagues?token=${token}`)
             .end((err, res) => {
@@ -31,8 +32,9 @@ describe('User tests', function () {
 });
 
 describe('Scores tests', function () {
+    this.timeout(20000);
+
     it("should list all of the scores for a league", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/scores/${league}/2?token=${token}`)
             .end((err, res) => {
@@ -49,8 +51,9 @@ describe('Scores tests', function () {
 });
 
 describe('League tests', function () {
+    this.timeout(20000);
+
     it("should list the settings for a league", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/league/${league}/settings?token=${token}`)
             .end((err, res) => {
@@ -67,7 +70,6 @@ describe('League tests', function () {
     });
 
     it("should list all the teams in a league", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/league/${league}/teams?token=${token}`)
             .end((err, res) => {
@@ -84,8 +86,9 @@ describe('League tests', function () {
 });
 
 describe('Rankings tests', function () {
+    this.timeout(20000);
+
     it("should return power rankings", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/rankings/${league}/1?token=${token}`)
             .end((err, res) => {
@@ -101,7 +104,6 @@ describe('Rankings tests', function () {
     });
 
     it("should show no change for first week", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/rankings/${league}/1?token=${token}`)
             .end((err, res) => {
@@ -118,7 +120,6 @@ describe('Rankings tests', function () {
     });
 
     it("changes should add up to 0", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/rankings/${league}/5?token=${token}`)
             .end((err, res) => {
@@ -137,7 +138,6 @@ describe('Rankings tests', function () {
     });
 
     it("should show correct changes", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/rankings/${league}/3?token=${token}`)
             .end((err, res) => {
@@ -163,7 +163,6 @@ describe('Rankings tests', function () {
     });
 
     it("should show correct win percentages", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/rankings/${league}/4?token=${token}`)
             .end((err, res) => {
@@ -189,7 +188,6 @@ describe('Rankings tests', function () {
     });
 
     it("should show correct teams", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/rankings/${league}/2?token=${token}`)
             .end((err, res) => {
@@ -215,7 +213,6 @@ describe('Rankings tests', function () {
     });
 
     it("should show all rankings correctly", function (done) {
-        this.timeout(20000);
         chai.request(server)
             .get(`/rankings/${league}/4/all?token=${token}`)
             .end((err, res) => {
