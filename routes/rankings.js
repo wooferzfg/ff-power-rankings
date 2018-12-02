@@ -19,7 +19,7 @@ const gaussian = require('gaussian');
  * @apiSuccess {Number} change The change in rank from the previous week to the current week. A positive number means that the team has improved its rank.
  */
 router.get('/:league_key/:week', function (req, res) {
-    var yf = req.app.yf;
+    var yf = auth.getYF(req.query.token);
     var leagueKey = req.params.league_key;
     var week = parseInt(req.params.week);
     scores.getScores(yf, leagueKey, week, res, data => {

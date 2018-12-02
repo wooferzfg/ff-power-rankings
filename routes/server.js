@@ -6,11 +6,7 @@ const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const OAuth2Strategy = require("passport-oauth2");
-const YahooFantasy = require("yahoo-fantasy");
 const cors = require('cors');
-
-const APP_KEY = tokens.yahooConsumerKey();
-const APP_SECRET = tokens.yahooConsumerSecret();
 
 const authRoute = require('./auth');
 const userRoute = require('./user');
@@ -36,8 +32,8 @@ passport.use(
         {
             authorizationURL: "https://api.login.yahoo.com/oauth2/request_auth",
             tokenURL: "https://api.login.yahoo.com/oauth2/get_token",
-            clientID: APP_KEY,
-            clientSecret: APP_SECRET,
+            clientID: tokens.yahooConsumerKey(),
+            clientSecret: tokens.yahooConsumerSecret(),
             callbackURL:
                 tokens.serverUrl() + "/auth/callback"
         },
@@ -56,8 +52,6 @@ passport.use(
 
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    app.yf.setUserToken(accessToken);
-
                     return done(null, accessToken);
                 }
             });
@@ -65,7 +59,6 @@ passport.use(
     )
 );
 
-app.yf = new YahooFantasy(APP_KEY, APP_SECRET);
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
