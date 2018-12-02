@@ -43,3 +43,7 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
+.sub-label {
+    margin-top: 0;
+}

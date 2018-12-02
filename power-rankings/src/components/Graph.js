@@ -10,7 +10,9 @@ class Graph extends Component {
         week: 0,
         settings: {
             total_weeks: 0,
-            num_teams: 0
+            num_teams: 0,
+            name: "",
+            season: ""
         },
         league_key: this.props.match.params.league_key,
         teams: null,
@@ -122,7 +124,8 @@ class Graph extends Component {
         return (
             <div className={"content-container"}>
                 <Navigation league_key={this.state.league_key} token={this.props.token} selected={"Graph"} />
-                <h1>Graph</h1>
+                <h1>{`${this.state.settings.season} ${this.state.settings.name}`}</h1>
+                <h2 className={"sub-label"}>Graph</h2>
                 <div className={"graph-container"}>
                     <ResponsiveLine
                         data={data}

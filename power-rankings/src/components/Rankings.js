@@ -8,7 +8,9 @@ class Rankings extends Component {
     state = {
         week: 0,
         settings: {
-            total_weeks: 0
+            total_weeks: 0,
+            name: "",
+            season: ""
         },
         league_key: this.props.match.params.league_key,
         teams: {},
@@ -83,7 +85,8 @@ class Rankings extends Component {
 
         return <div className={"content-container"}>
             <Navigation league_key={this.state.league_key} token={this.props.token} selected={"Rankings"} />
-            <h1>Rankings</h1>
+            <h1>{`${this.state.settings.season} ${this.state.settings.name}`}</h1>
+            <h2 className={"sub-label"} > Rankings</h2>
             <div className={"weeks-list"}>
                 <div className={"week-label"}>Week:</div>
                 {
