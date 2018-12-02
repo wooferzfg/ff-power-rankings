@@ -1,7 +1,10 @@
+// mocha tests/api_tests.js --token=AAAAAA 
+
 var tokens = require('../power-rankings/src/tokens.js');
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var chaiAlmost = require('chai-almost');
+var token = require('minimist')(process.argv.slice(2)).token;
 
 require('chai').should();
 chai.use(chaiHttp);
@@ -14,7 +17,7 @@ describe('User tests', function () {
     it("should list all of a user's leagues", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/user/leagues')
+            .get(`/user/leagues?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -31,7 +34,7 @@ describe('Scores tests', function () {
     it("should list all of the scores for a league", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/scores/' + league + "/2")
+            .get(`/scores/${league}/2?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -49,7 +52,7 @@ describe('League tests', function () {
     it("should list the settings for a league", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/league/' + league + "/settings")
+            .get(`/league/${league}/settings?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Object');
@@ -66,7 +69,7 @@ describe('League tests', function () {
     it("should list all the teams in a league", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/league/' + league + "/teams")
+            .get(`/league/${league}/teams?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -84,7 +87,7 @@ describe('Rankings tests', function () {
     it("should return power rankings", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/rankings/' + league + "/1")
+            .get(`/rankings/${league}/1?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -100,7 +103,7 @@ describe('Rankings tests', function () {
     it("should show no change for first week", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/rankings/' + league + "/1")
+            .get(`/rankings/${league}/1?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -117,7 +120,7 @@ describe('Rankings tests', function () {
     it("changes should add up to 0", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/rankings/' + league + "/5")
+            .get(`/rankings/${league}/5?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -136,7 +139,7 @@ describe('Rankings tests', function () {
     it("should show correct changes", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/rankings/' + league + "/3")
+            .get(`/rankings/${league}/3?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -162,7 +165,7 @@ describe('Rankings tests', function () {
     it("should show correct win percentages", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/rankings/' + league + "/4")
+            .get(`/rankings/${league}/4?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -188,7 +191,7 @@ describe('Rankings tests', function () {
     it("should show correct teams", function (done) {
         this.timeout(20000);
         chai.request(server)
-            .get('/rankings/' + league + "/2")
+            .get(`/rankings/${league}/2?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
