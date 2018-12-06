@@ -17,7 +17,7 @@ class Rankings extends Component {
         rankings: [],
         page_name: this.props.weighted ? "Rankings" : "Standings",
         page_description: this.props.weighted
-            ? "Teams ranked based on the quality of their recent performance, where the win percentage represents the full season win rate that their recent performance is equivalent to. More recent weeks are weighted more heavily."
+            ? "Teams ranked based on the quality of their recent performance, where the win percentage represents the full season win rate that their recent performance is equivalent to. Recent weeks are weighted more heavily."
             : "Teams ranked based on the win percentage they are expected to have, which is calculated from the number of points they have scored in each week. All weeks are weighted equally."
     }
 
