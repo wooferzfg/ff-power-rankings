@@ -227,4 +227,29 @@ describe('Rankings tests', function () {
                 done();
             });
     });
+
+    it("should show unweighted rankings correctly", function (done) {
+        chai.request(server)
+            .get(`/rankings/${league}/4/unweighted?token=${token}`)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('Array');
+
+                res.body[0].win_percentage.should.almost.equal(0.739);
+                res.body[1].win_percentage.should.almost.equal(0.724);
+                res.body[2].win_percentage.should.almost.equal(0.630);
+                res.body[3].win_percentage.should.almost.equal(0.599);
+                res.body[4].win_percentage.should.almost.equal(0.559);
+                res.body[5].win_percentage.should.almost.equal(0.544);
+                res.body[6].win_percentage.should.almost.equal(0.481);
+                res.body[7].win_percentage.should.almost.equal(0.468);
+                res.body[8].win_percentage.should.almost.equal(0.449);
+                res.body[9].win_percentage.should.almost.equal(0.388);
+                res.body[10].win_percentage.should.almost.equal(0.297);
+                res.body[11].win_percentage.should.almost.equal(0.089);
+
+                (err === null).should.equal(true);
+                done();
+            });
+    });
 });

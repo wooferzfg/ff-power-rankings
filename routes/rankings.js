@@ -23,7 +23,29 @@ router.get('/:league_key/:week', function (req, res) {
     var leagueKey = req.params.league_key;
     var week = parseInt(req.params.week);
     scores.getScores(yf, leagueKey, week, res, data => {
-        powerRankings(week, res, data);
+        powerRankings(week, res, data, true);
+    });
+});
+
+/**
+ * @api{get} /rankings/:league_key/:week/unweighted?token=:token GetUnweightedRankingsForWeek
+ * @apiGroup Rankings
+ * @apiVersion 1.0.0
+ * 
+ * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
+ * @apiParam {Number} week The week number to get rankings for. If the parameter is "5", the rankings will include data from weeks 1 through 5.
+ * @apiParam {String} token The Yahoo API token.
+ * 
+ * @apiSuccess {String} team_id The id of the team within the league.
+ * @apiSuccess {Number} win_percentage The weighted win percentage based on the power rankings formula.
+ * @apiSuccess {Number} change The change in rank from the previous week to the current week. A positive number means that the team has improved its rank.
+ */
+router.get('/:league_key/:week/unweighted', function (req, res) {
+    var yf = auth.getYF(req.query.token);
+    var leagueKey = req.params.league_key;
+    var week = parseInt(req.params.week);
+    scores.getScores(yf, leagueKey, week, res, data => {
+        powerRankings(week, res, data, false);
     });
 });
 
@@ -46,7 +68,7 @@ router.get('/:league_key/:week/all', function (req, res) {
     scores.getScores(yf, leagueKey, week, res, data => {
         var result = [];
         for (var i = 1; i <= week; i++) {
-            var curWeek = calculateRankings(i, data);
+            var curWeek = calculateRankings(i, data, true);
             result.push(curWeek);
         }
         res.status(200).send(result);
@@ -71,10 +93,10 @@ const PRIOR_MEAN = 90;
  */
 const PRIOR_VARIANCE = 15129;
 
-function powerRankings(week, res, data) {
-    var curWeek = calculateRankings(week, data);
+function powerRankings(week, res, data, weighted) {
+    var curWeek = calculateRankings(week, data, weighted);
     if (week > 1) {
-        var prevWeek = calculateRankings(week - 1, data);
+        var prevWeek = calculateRankings(week - 1, data, weighted);
     }
 
     for (var i = 0; i < curWeek.length; i++) {
@@ -102,7 +124,7 @@ function getRankOfTeam(rankings, team_id) {
     }
 }
 
-function calculateRankings(maxWeek, data) {
+function calculateRankings(maxWeek, data, weighted) {
     allScores = []
     scoresDict = {}
     for (var i = 1; i <= maxWeek; i++) {
@@ -119,8 +141,8 @@ function calculateRankings(maxWeek, data) {
         }
     }
 
-    const meanPriorRatio = getMeanPriorRatio(maxWeek);
-    const variancePriorRatio = getVariancePriorRatio(maxWeek);
+    const meanPriorRatio = getMeanPriorRatio(maxWeek, weighted);
+    const variancePriorRatio = getVariancePriorRatio(maxWeek, weighted);
     const curMean = math.mean(allScores);
     const curSD = math.std(allScores);
     const mean = interpolate(curMean, PRIOR_MEAN, meanPriorRatio);
@@ -129,7 +151,7 @@ function calculateRankings(maxWeek, data) {
 
     var result = {};
     for (var i = 1; i <= maxWeek; i++) {
-        var curRatio = getWeekRatio(i, maxWeek);
+        var curRatio = getWeekRatio(i, maxWeek, weighted);
 
         for (team_id in scoresDict[i]) {
             if (i == 1) {
@@ -155,14 +177,20 @@ function calculateRankings(maxWeek, data) {
     return sortedResult;
 }
 
-function getMeanPriorRatio(week) {
-    // 0.7, 0.49, 0.343, etc.
-    return math.pow(0.7, week);
+function getMeanPriorRatio(week, weighted) {
+    if (weighted) {
+        // 0.7, 0.49, 0.343, etc.
+        return math.pow(0.7, week);
+    }
+    return 0; // don't use prior for standings
 }
 
-function getVariancePriorRatio(week) {
-    // 0.333, 0.125, 0.067, etc.
-    return 1 / ((week + 2) * week);
+function getVariancePriorRatio(week, weighted) {
+    if (weighted) {
+        // 0.333, 0.125, 0.067, etc.
+        return 1 / ((week + 2) * week);
+    }
+    return 0; // don't use prior for standings   
 }
 
 function interpolate(current, prior, priorRatio) {
@@ -172,11 +200,11 @@ function interpolate(current, prior, priorRatio) {
     return current * (1 - priorRatio) + prior * priorRatio;
 }
 
-function getWeekRatio(week, totalWeeks) {
+function getWeekRatio(week, totalWeeks, weighted) {
     // the ratio of the week's weight to the total weight of all weeks
     var totalWeight = 0;
     for (var i = 1; i <= totalWeeks; i++) {
-        var curWeight = getWeekWeight(i, totalWeeks);
+        var curWeight = getWeekWeight(i, totalWeeks, weighted);
         totalWeight += curWeight;
         if (i == week) {
             var myWeight = curWeight;
@@ -185,11 +213,14 @@ function getWeekRatio(week, totalWeeks) {
     return myWeight / totalWeight;
 }
 
-function getWeekWeight(week, totalWeeks) {
-    // 1/3 for the most recent week
-    // 1/4 for the second most recent week
-    // etc.
-    return 1 / (totalWeeks - week + 3);
+function getWeekWeight(week, totalWeeks, weighted) {
+    if (weighted) {
+        // 1/3 for the most recent week
+        // 1/4 for the second most recent week
+        // etc.
+        return 1 / (totalWeeks - week + 3);
+    }
+    return 1; // all weeks weighted equally for standings
 }
 
 module.exports = router;

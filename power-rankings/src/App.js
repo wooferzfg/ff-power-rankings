@@ -29,7 +29,8 @@ class App extends Component {
                         <div className="app">
                             <Switch>
                                 {this.state.token && <Route exact path="/leagues" render={(props) => <Leagues token={this.state.token} {...props} />} />}
-                                {this.state.token && <Route path="/rankings/:league_key/:week?" render={(props) => <Rankings token={this.state.token} {...props} />} />}
+                                {this.state.token && <Route path="/rankings/:league_key/:week?" render={(props) => <Rankings weighted={true} token={this.state.token} {...props} />} />}
+                                {this.state.token && <Route path="/standings/:league_key/:week?" render={(props) => <Rankings weighted={false} token={this.state.token} {...props} />} />}
                                 {this.state.token && <Route path="/graph/:league_key" render={(props) => <Graph token={this.state.token} {...props} />} />}
                                 {this.state.token && <Route path="/data/:league_key" render={(props) => <Data token={this.state.token} {...props} />} />}
                                 <Route exact path="/" component={Login} />

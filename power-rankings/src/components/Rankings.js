@@ -14,7 +14,8 @@ class Rankings extends Component {
         },
         league_key: this.props.match.params.league_key,
         teams: {},
-        rankings: []
+        rankings: [],
+        page_name: this.props.weighted ? "Rankings" : "Standings"
     }
 
     componentWillMount() {
@@ -66,7 +67,11 @@ class Rankings extends Component {
     }
 
     loadRankings() {
-        axios.get(`${tokens.serverUrl()}/rankings/${this.state.league_key}/${this.state.week}?token=${this.props.token}`).then(res => {
+        var unweightedPart = "";
+        if (!this.props.weighted) {
+            unweightedPart = "/unweighted";
+        }
+        axios.get(`${tokens.serverUrl()}/rankings/${this.state.league_key}/${this.state.week}${unweightedPart}?token=${this.props.token}`).then(res => {
             this.setState({
                 rankings: res.data
             });
@@ -84,15 +89,15 @@ class Rankings extends Component {
         }
 
         return <div className={"content-container"}>
-            <Navigation league_key={this.state.league_key} token={this.props.token} selected={"Rankings"} />
+            <Navigation league_key={this.state.league_key} token={this.props.token} selected={this.state.page_name} />
             <h1>{`${this.state.settings.season} ${this.state.settings.name}`}</h1>
-            <h2 className={"sub-label"} > Rankings</h2>
+            <h2 className={"sub-label"}>{this.state.page_name}</h2>
             <div className={"weeks-list"}>
                 <div className={"week-label"}>Week:</div>
                 {
                     weeks.map(week =>
                         <div key={week} className={`week${(week === this.state.week ? " current-week" : "")}${(week > this.state.settings.current_week ? " disabled" : "")}`}>
-                            <a href={`/rankings/${this.state.league_key}/${week}?token=${this.props.token}`}>{week}</a>
+                            <a href={`/${this.state.page_name.toLowerCase()}/${this.state.league_key}/${week}?token=${this.props.token}`}>{week}</a>
                         </div>
                     )
                 }
