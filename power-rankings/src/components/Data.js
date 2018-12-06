@@ -77,6 +77,7 @@ class Data extends Component {
                 <Navigation league_key={this.state.league_key} token={this.props.token} selected={"Data"} />
                 <h1>{`${this.state.settings.season} ${this.state.settings.name}`}</h1>
                 <h2 className={"sub-label"}>Data</h2>
+                <div className={"description"}>The number of points that each team scored in every week of the season.</div>
                 <table className={"data"}>
                     <tbody>
                         <tr>

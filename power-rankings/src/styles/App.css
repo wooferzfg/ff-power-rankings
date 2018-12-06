@@ -46,4 +46,9 @@ a {
 
 .sub-label {
     margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.description {
+    margin-bottom: 15px;
 }

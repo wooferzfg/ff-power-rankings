@@ -125,6 +125,7 @@ class Graph extends Component {
                 <Navigation league_key={this.state.league_key} token={this.props.token} selected={"Graph"} />
                 <h1>{`${this.state.settings.season} ${this.state.settings.name}`}</h1>
                 <h2 className={"sub-label"}>Graph</h2>
+                <div className={"description"}>A graph of the quality of each team's recent performance leading up to every week of the season.</div>
                 <div className={"graph-container"}>
                     <ResponsiveLine
                         data={data}

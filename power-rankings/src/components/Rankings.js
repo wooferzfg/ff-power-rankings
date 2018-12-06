@@ -15,7 +15,10 @@ class Rankings extends Component {
         league_key: this.props.match.params.league_key,
         teams: {},
         rankings: [],
-        page_name: this.props.weighted ? "Rankings" : "Standings"
+        page_name: this.props.weighted ? "Rankings" : "Standings",
+        page_description: this.props.weighted
+            ? "Teams ranked based on the quality of their recent performance, where the win percentage represents the full season win rate that their recent performance is equivalent to."
+            : "Teams ranked based on the win percentage they are expected to have, which is calculated from the number of points they have scored in each week."
     }
 
     componentWillMount() {
@@ -92,6 +95,7 @@ class Rankings extends Component {
             <Navigation league_key={this.state.league_key} token={this.props.token} selected={this.state.page_name} />
             <h1>{`${this.state.settings.season} ${this.state.settings.name}`}</h1>
             <h2 className={"sub-label"}>{this.state.page_name}</h2>
+            <div className={"description"}>{this.state.page_description}</div>
             <div className={"weeks-list"}>
                 <div className={"week-label"}>Week:</div>
                 {
