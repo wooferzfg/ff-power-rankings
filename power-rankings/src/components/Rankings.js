@@ -10,7 +10,8 @@ class Rankings extends Component {
         settings: {
             total_weeks: 0,
             name: "",
-            season: ""
+            season: "",
+            expected_mean: 0
         },
         league_key: this.props.match.params.league_key,
         teams: {},
@@ -74,7 +75,7 @@ class Rankings extends Component {
         if (!this.props.weighted) {
             unweightedPart = "/unweighted";
         }
-        axios.get(`${tokens.serverUrl()}/rankings/${this.state.league_key}/${this.state.week}${unweightedPart}?token=${this.props.token}`).then(res => {
+        axios.get(`${tokens.serverUrl()}/rankings/${this.state.league_key}/${this.state.week}/${this.state.settings.expected_mean}${unweightedPart}?token=${this.props.token}`).then(res => {
             this.setState({
                 rankings: res.data
             });

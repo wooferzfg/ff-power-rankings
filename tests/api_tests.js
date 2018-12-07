@@ -12,6 +12,7 @@ chai.use(chaiAlmost(0.001));
 
 var server = tokens.serverUrl();
 var league = "380.l.102172";
+var expectedMean = 90;
 
 describe('User tests', function () {
     this.timeout(20000);
@@ -64,6 +65,7 @@ describe('League tests', function () {
                 res.body.should.have.property("num_teams");
                 res.body.should.have.property("current_week");
                 res.body.should.have.property("total_weeks");
+                res.body.should.have.property("expected_mean");
                 (err === null).should.equal(true);
                 done();
             });
@@ -90,7 +92,7 @@ describe('Rankings tests', function () {
 
     it("should return power rankings", function (done) {
         chai.request(server)
-            .get(`/rankings/${league}/1?token=${token}`)
+            .get(`/rankings/${league}/1/${expectedMean}?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -105,7 +107,7 @@ describe('Rankings tests', function () {
 
     it("should show no change for first week", function (done) {
         chai.request(server)
-            .get(`/rankings/${league}/1?token=${token}`)
+            .get(`/rankings/${league}/1/${expectedMean}?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -121,7 +123,7 @@ describe('Rankings tests', function () {
 
     it("changes should add up to 0", function (done) {
         chai.request(server)
-            .get(`/rankings/${league}/5?token=${token}`)
+            .get(`/rankings/${league}/5/${expectedMean}?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -139,7 +141,7 @@ describe('Rankings tests', function () {
 
     it("should show correct changes", function (done) {
         chai.request(server)
-            .get(`/rankings/${league}/3?token=${token}`)
+            .get(`/rankings/${league}/3/${expectedMean}?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -164,7 +166,7 @@ describe('Rankings tests', function () {
 
     it("should show correct win percentages", function (done) {
         chai.request(server)
-            .get(`/rankings/${league}/4?token=${token}`)
+            .get(`/rankings/${league}/4/${expectedMean}?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -189,7 +191,7 @@ describe('Rankings tests', function () {
 
     it("should show correct teams", function (done) {
         chai.request(server)
-            .get(`/rankings/${league}/2?token=${token}`)
+            .get(`/rankings/${league}/2/${expectedMean}?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -214,7 +216,7 @@ describe('Rankings tests', function () {
 
     it("should show all rankings correctly", function (done) {
         chai.request(server)
-            .get(`/rankings/${league}/4/all?token=${token}`)
+            .get(`/rankings/${league}/4/${expectedMean}/all?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');
@@ -230,7 +232,7 @@ describe('Rankings tests', function () {
 
     it("should show unweighted rankings correctly", function (done) {
         chai.request(server)
-            .get(`/rankings/${league}/4/unweighted?token=${token}`)
+            .get(`/rankings/${league}/4/${expectedMean}/unweighted?token=${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('Array');

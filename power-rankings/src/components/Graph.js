@@ -11,7 +11,8 @@ class Graph extends Component {
         settings: {
             num_teams: 0,
             name: "",
-            season: ""
+            season: "",
+            expected_mean: 0
         },
         league_key: this.props.match.params.league_key,
         teams: null,
@@ -63,7 +64,7 @@ class Graph extends Component {
     }
 
     loadRankings() {
-        axios.get(`${tokens.serverUrl()}/rankings/${this.state.league_key}/${this.state.week}/all?token=${this.props.token}`).then(res => {
+        axios.get(`${tokens.serverUrl()}/rankings/${this.state.league_key}/${this.state.week}/${this.state.settings.expected_mean}/all?token=${this.props.token}`).then(res => {
             var result = [];
             var team_ids = [];
             var finalRankings = res.data[res.data.length - 1];

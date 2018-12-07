@@ -12,18 +12,20 @@ const gaussian = require('gaussian');
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
  * @apiParam {Number} week The week number to get rankings for. If the parameter is "5", the rankings will include data from weeks 1 through 5.
+ * @apiParam {Number} expected_mean The expected mean scoring for each team in each week of the season.
  * @apiParam {String} token The Yahoo API token.
  * 
  * @apiSuccess {String} team_id The id of the team within the league.
  * @apiSuccess {Number} win_percentage The weighted win percentage based on the power rankings formula.
  * @apiSuccess {Number} change The change in rank from the previous week to the current week. A positive number means that the team has improved its rank.
  */
-router.get('/:league_key/:week', function (req, res) {
+router.get('/:league_key/:week/:expected_mean', function (req, res) {
     var yf = auth.getYF(req.query.token);
     var leagueKey = req.params.league_key;
     var week = parseInt(req.params.week);
+    var expectedMean = Number(req.params.expected_mean);
     scores.getScores(yf, leagueKey, week, res, data => {
-        powerRankings(week, res, data, true);
+        powerRankings(week, res, data, true, expectedMean);
     });
 });
 
@@ -34,18 +36,20 @@ router.get('/:league_key/:week', function (req, res) {
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
  * @apiParam {Number} week The week number to get rankings for. If the parameter is "5", the rankings will include data from weeks 1 through 5.
+ * @apiParam {Number} expected_mean The expected mean scoring for each team in each week of the season.
  * @apiParam {String} token The Yahoo API token.
  * 
  * @apiSuccess {String} team_id The id of the team within the league.
  * @apiSuccess {Number} win_percentage The weighted win percentage based on the power rankings formula.
  * @apiSuccess {Number} change The change in rank from the previous week to the current week. A positive number means that the team has improved its rank.
  */
-router.get('/:league_key/:week/unweighted', function (req, res) {
+router.get('/:league_key/:week/:expected_mean/unweighted', function (req, res) {
     var yf = auth.getYF(req.query.token);
     var leagueKey = req.params.league_key;
     var week = parseInt(req.params.week);
+    var expectedMean = Number(req.params.expected_mean);
     scores.getScores(yf, leagueKey, week, res, data => {
-        powerRankings(week, res, data, false);
+        powerRankings(week, res, data, false, expectedMean);
     });
 });
 
@@ -56,27 +60,26 @@ router.get('/:league_key/:week/unweighted', function (req, res) {
  * 
  * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
  * @apiParam {Number} week The last week number to get rankings for. If the parameter is "5", there will be rankings for weeks 1 through 5.
+ * @apiParam {Number} expected_mean The expected mean scoring for each team in each week of the season.
  * @apiParam {String} token The Yahoo API token.
  * 
  * @apiSuccess {String} team_id The id of the team within the league.
  * @apiSuccess {Number} win_percentage The weighted win percentage based on the power rankings formula.
  */
-router.get('/:league_key/:week/all', function (req, res) {
+router.get('/:league_key/:week/:expected_mean/all', function (req, res) {
     var yf = auth.getYF(req.query.token);
     var leagueKey = req.params.league_key;
     var week = parseInt(req.params.week);
+    var expectedMean = Number(req.params.expected_mean);
     scores.getScores(yf, leagueKey, week, res, data => {
         var result = [];
         for (var i = 1; i <= week; i++) {
-            var curWeek = calculateRankings(i, data, true);
+            var curWeek = calculateRankings(i, data, true, expectedMean);
             result.push(curWeek);
         }
         res.status(200).send(result);
     });
 });
-
-// based on historical data
-const PRIOR_MEAN = 90;
 
 /**
  * historical data has a standard deviation of 22
@@ -93,10 +96,10 @@ const PRIOR_MEAN = 90;
  */
 const PRIOR_VARIANCE = 15129;
 
-function powerRankings(week, res, data, weighted) {
-    var curWeek = calculateRankings(week, data, weighted);
+function powerRankings(week, res, data, weighted, expected_mean) {
+    var curWeek = calculateRankings(week, data, weighted, expected_mean);
     if (week > 1) {
-        var prevWeek = calculateRankings(week - 1, data, weighted);
+        var prevWeek = calculateRankings(week - 1, data, weighted, expected_mean);
     }
 
     for (var i = 0; i < curWeek.length; i++) {
@@ -124,7 +127,7 @@ function getRankOfTeam(rankings, team_id) {
     }
 }
 
-function calculateRankings(maxWeek, data, weighted) {
+function calculateRankings(maxWeek, data, weighted, expected_mean) {
     allScores = []
     scoresDict = {}
     for (var i = 1; i <= maxWeek; i++) {
@@ -145,7 +148,7 @@ function calculateRankings(maxWeek, data, weighted) {
     const variancePriorRatio = getVariancePriorRatio(maxWeek, weighted);
     const curMean = math.mean(allScores);
     const curSD = math.std(allScores);
-    const mean = interpolate(curMean, PRIOR_MEAN, meanPriorRatio);
+    const mean = interpolate(curMean, expected_mean, meanPriorRatio);
     const variance = interpolate(curSD * curSD, PRIOR_VARIANCE, variancePriorRatio);
     const distribution = gaussian(mean, variance);
 
