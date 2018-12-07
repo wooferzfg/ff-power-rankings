@@ -14,7 +14,8 @@ class Data extends Component {
         },
         league_key: this.props.match.params.league_key,
         teams: [],
-        scores: null
+        scores: null,
+        sort_by: null
     }
 
     componentWillMount() {
@@ -66,11 +67,37 @@ class Data extends Component {
         });
     }
 
-    render() {
+    getWeeks() {
         var weeks = [];
-        for (var i = 1; i <= this.state.week; i++) {
-            weeks.push(i);
+        if (this.state.scores) {
+            for (var i = 1; i <= this.state.week; i++) {
+                weeks.push(i);
+            }
+            weeks.sort((a, b) => {
+                if (this.state.sort_by) {
+                    return this.state.scores[this.state.sort_by][a] - this.state.scores[this.state.sort_by][b];
+                } else {
+                    return a - b;
+                }
+            });
         }
+        return weeks;
+    }
+
+    setSortBy(team) {
+        if (this.state.sort_by == team.team_id) {
+            this.setState({
+                sort_by: null
+            });
+        } else {
+            this.setState({
+                sort_by: team.team_id
+            });
+        }
+    }
+
+    render() {
+        var weeks = this.getWeeks();
 
         return (
             <div className={"content-container"}>
@@ -85,16 +112,17 @@ class Data extends Component {
                             {
                                 this.state.teams.map(team =>
                                     <td>
-                                        <div className={"team-label"}>
+                                        <div onClick={() => this.setSortBy(team)} className={"team-label"}>
                                             <div className={"team-logo"}><img src={team.logo_url} /></div>
                                             <div className={"team-name"}>{team.name}</div>
+                                            <div className={"sort-by"}>{this.state.sort_by === team.team_id ? "▼" : " "}</div>
                                         </div>
                                     </td>
                                 )
                             }
                         </tr>
                         {
-                            this.state.scores && weeks.map(week =>
+                            weeks.map(week =>
                                 <tr>
                                     <td className={"week"}>Week {week}</td>
                                     {

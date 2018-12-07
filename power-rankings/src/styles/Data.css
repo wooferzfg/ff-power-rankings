@@ -26,9 +26,12 @@
     align-items: center;
     justify-content: center;
     width: 100px;
+    cursor: pointer;
+    min-height: 100px;
 }
 
-.data .team-name {
+.data .team-name,
+.data .sort-by {
     font-size: 0.8em;
     margin-top: 5px;
 }
