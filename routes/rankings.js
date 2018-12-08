@@ -82,6 +82,47 @@ router.get('/:league_key/:week/:expected_mean/all', function (req, res) {
 });
 
 /**
+ * @api{get} /rankings/:league_key/:week/details/:team_id?token=:token GetDetailsForTeam
+ * @apiGroup Rankings
+ * @apiVersion 1.0.0
+ * 
+ * @apiParam {String} league_key The key for a league. Should be in the form "123.l.123456".
+ * @apiParam {Number} week The last week number to get rankings for. If the parameter is "5", there will be rankings for weeks 1 through 5.
+ * @apiParam {Number} expected_mean The expected mean scoring for each team in each week of the season.
+ * @apiParam {String} team_id The id of the team within the league.
+ * @apiParam {String} token The Yahoo API token.
+ * 
+ * @apiSuccess {Number} week The week number that this data pertains to.
+ * @apiSuccess {Number} points The number of points that the team scored during the given week.
+ * @apiSuccess {Number} wins The likelihood of a win during this week, in the form of a number from 0 to 1.
+ * @apiSuccess {Number} ratio The weight of this week relative to the combined weight of all the weeks.
+ */
+router.get('/:league_key/:week/:expected_mean/details/:team_id', function (req, res) {
+    var yf = auth.getYF(req.query.token);
+    var leagueKey = req.params.league_key;
+    var week = parseInt(req.params.week);
+    var expectedMean = Number(req.params.expected_mean);
+    var teamID = req.params.team_id;
+    scores.getScores(yf, leagueKey, week, res, data => {
+        var scoresDict = getScoresDict(week, data);
+        const distribution = getDistribution(week, data, true, expectedMean);
+        var result = [];
+        for (var i = 1; i <= week; i++) {
+            var curScore = scoresDict[i][teamID];
+            var curWins = distribution.cdf(curScore);
+            var curRatio = getWeekRatio(i, week, true);
+            result.push({
+                week: i,
+                points: curScore,
+                wins: curWins,
+                ratio: curRatio
+            });
+        }
+        res.status(200).send(result);
+    });
+});
+
+/**
  * historical data has a standard deviation of 22
  * inverse cdf with an area of 0.975 results in an sd of 49
  * 
@@ -128,29 +169,8 @@ function getRankOfTeam(rankings, team_id) {
 }
 
 function calculateRankings(maxWeek, data, weighted, expected_mean) {
-    allScores = []
-    scoresDict = {}
-    for (var i = 1; i <= maxWeek; i++) {
-        scoresDict[i] = {};
-    }
-
-    for (var i = 0; i < data.length; i++) {
-        var element = data[i];
-        var curWeek = element.week;
-        if (curWeek <= maxWeek) {
-            var curPoints = element.points;
-            allScores.push(curPoints);
-            scoresDict[curWeek][element.team_id] = curPoints;
-        }
-    }
-
-    const meanPriorRatio = getMeanPriorRatio(maxWeek, weighted);
-    const variancePriorRatio = getVariancePriorRatio(maxWeek, weighted);
-    const curMean = math.mean(allScores);
-    const curSD = math.std(allScores);
-    const mean = interpolate(curMean, expected_mean, meanPriorRatio);
-    const variance = interpolate(curSD * curSD, PRIOR_VARIANCE, variancePriorRatio);
-    const distribution = gaussian(mean, variance);
+    var scoresDict = getScoresDict(maxWeek, data);
+    const distribution = getDistribution(maxWeek, data, weighted, expected_mean);
 
     var result = {};
     for (var i = 1; i <= maxWeek; i++) {
@@ -178,6 +198,45 @@ function calculateRankings(maxWeek, data, weighted, expected_mean) {
     });
 
     return sortedResult;
+}
+
+function getScoresDict(maxWeek, data) {
+    var scoresDict = {}
+    for (var i = 1; i <= maxWeek; i++) {
+        scoresDict[i] = {};
+    }
+
+    for (var i = 0; i < data.length; i++) {
+        var element = data[i];
+        var curWeek = element.week;
+        if (curWeek <= maxWeek) {
+            var curPoints = element.points;
+            scoresDict[curWeek][element.team_id] = curPoints;
+        }
+    }
+
+    return scoresDict;
+}
+
+function getDistribution(maxWeek, data, weighted, expected_mean) {
+    var allScores = []
+    for (var i = 0; i < data.length; i++) {
+        var element = data[i];
+        var curWeek = element.week;
+        if (curWeek <= maxWeek) {
+            var curPoints = element.points;
+            allScores.push(curPoints);
+        }
+    }
+
+    const meanPriorRatio = getMeanPriorRatio(maxWeek, weighted);
+    const variancePriorRatio = getVariancePriorRatio(maxWeek, weighted);
+    const curMean = math.mean(allScores);
+    const curSD = math.std(allScores);
+    const mean = interpolate(curMean, expected_mean, meanPriorRatio);
+    const variance = interpolate(curSD * curSD, PRIOR_VARIANCE, variancePriorRatio);
+
+    return gaussian(mean, variance);
 }
 
 function getMeanPriorRatio(week, weighted) {

@@ -254,4 +254,20 @@ describe('Rankings tests', function () {
                 done();
             });
     });
+
+    it("should show details for a team", function (done) {
+        chai.request(server)
+            .get(`/rankings/${league}/3/${expectedMean}/details/1?token=${token}`)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('Array');
+                res.body.length.should.be.eql(3);
+                res.body.should.have.nested.property("[0].week");
+                res.body.should.have.nested.property("[0].points");
+                res.body.should.have.nested.property("[0].wins");
+                res.body.should.have.nested.property("[0].ratio");
+                (err === null).should.equal(true);
+                done();
+            });
+    });
 });
