@@ -57,11 +57,7 @@ class Rankings extends Component {
             var data = res.data;
             for (var i = 0; i < data.length; i++) {
                 var curTeam = data[i];
-                var curTeamResult = {
-                    name: curTeam.name,
-                    logo_url: curTeam.logo_url
-                };
-                teams[curTeam.team_id] = curTeamResult;
+                teams[curTeam.team_id] = curTeam;
             }
 
             this.setState({
@@ -84,6 +80,12 @@ class Rankings extends Component {
 
     formatWinPercentage(winPercentage) {
         return winPercentage.toFixed(3).substring(1);
+    }
+
+    clickRankingsRow(team_id) {
+        if (this.props.weighted) {
+            window.location = `${tokens.clientUrl()}/details/${this.state.league_key}/${this.state.week}/${team_id}?token=${this.props.token}`;
+        }
     }
 
     render() {
@@ -118,7 +120,7 @@ class Rankings extends Component {
                     {
                         this.state.rankings.map((team, index) => {
                             var teamInfo = this.state.teams[team.team_id];
-                            return <tr key={index}>
+                            return <tr key={index} className={this.props.weighted ? "rankings-row" : ""} onClick={() => this.clickRankingsRow(team.team_id)}>
                                 <td className={"rank"}>{index + 1}</td>
                                 <td><img className={"team-logo"} src={teamInfo.logo_url}></img></td>
                                 <td className={"team-name"}>{teamInfo.name}</td>

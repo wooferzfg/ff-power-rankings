@@ -32,12 +32,12 @@
     border-collapse: collapse;
 }
 
-.table-header {
+.rankings .table-header {
     background-color: white;
     text-transform: uppercase;
 }
 
-.table-header td {
+.rankings .table-header td {
     font-size: 0.7em;
     text-align: center;
     padding-left: 10px;
@@ -109,4 +109,8 @@
 .rankings .change-text {
     text-align: left;
     padding-right: 15px;
+}
+
+.rankings .rankings-row {
+    cursor: pointer;
 }

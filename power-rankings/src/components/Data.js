@@ -111,7 +111,7 @@ class Data extends Component {
                             <td></td>
                             {
                                 this.state.teams.map(team =>
-                                    <td>
+                                    <td key={team.team_id}>
                                         <div onClick={() => this.setSortBy(team)} className={"team-label"}>
                                             <div className={"team-logo"}><img src={team.logo_url} /></div>
                                             <div className={"team-name"}>{team.name}</div>

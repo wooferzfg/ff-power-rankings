@@ -51,10 +51,7 @@ class Graph extends Component {
             var data = res.data;
             for (var i = 0; i < data.length; i++) {
                 var curTeam = data[i];
-                var curTeamResult = {
-                    name: curTeam.name,
-                };
-                teams[curTeam.team_id] = curTeamResult;
+                teams[curTeam.team_id] = curTeam;
             }
 
             this.setState({

@@ -74,7 +74,7 @@ router.get('/:league_key/:week/:expected_mean/all', function (req, res) {
     scores.getScores(yf, leagueKey, week, res, data => {
         var result = [];
         for (var i = 1; i <= week; i++) {
-            var curWeek = calculateRankings(i, data, true, expectedMean);
+            var curWeek = calculateSortedRankings(i, data, true, expectedMean);
             result.push(curWeek);
         }
         res.status(200).send(result);
@@ -104,20 +104,29 @@ router.get('/:league_key/:week/:expected_mean/details/:team_id', function (req, 
     var expectedMean = Number(req.params.expected_mean);
     var teamID = req.params.team_id;
     scores.getScores(yf, leagueKey, week, res, data => {
+        var rankings = calculateRankings(week, data, true, expectedMean);
+        var winPercentage = rankings[teamID];
+
         var scoresDict = getScoresDict(week, data);
         const distribution = getDistribution(week, data, true, expectedMean);
-        var result = [];
+        var calculation = [];
         for (var i = 1; i <= week; i++) {
             var curScore = scoresDict[i][teamID];
             var curWins = distribution.cdf(curScore);
             var curRatio = getWeekRatio(i, week, true);
-            result.push({
+            calculation.push({
                 week: i,
                 points: curScore,
                 wins: curWins,
                 ratio: curRatio
             });
         }
+
+        var result = {
+            win_percentage: winPercentage,
+            calculation: calculation
+        }
+
         res.status(200).send(result);
     });
 });
@@ -138,9 +147,9 @@ router.get('/:league_key/:week/:expected_mean/details/:team_id', function (req, 
 const PRIOR_VARIANCE = 15129;
 
 function powerRankings(week, res, data, weighted, expected_mean) {
-    var curWeek = calculateRankings(week, data, weighted, expected_mean);
+    var curWeek = calculateSortedRankings(week, data, weighted, expected_mean);
     if (week > 1) {
-        var prevWeek = calculateRankings(week - 1, data, weighted, expected_mean);
+        var prevWeek = calculateSortedRankings(week - 1, data, weighted, expected_mean);
     }
 
     for (var i = 0; i < curWeek.length; i++) {
@@ -187,6 +196,11 @@ function calculateRankings(maxWeek, data, weighted, expected_mean) {
             result[team_id] += curWins * curRatio;
         }
     }
+    return result;
+}
+
+function calculateSortedRankings(maxWeek, data, weighted, expected_mean) {
+    var result = calculateRankings(maxWeek, data, weighted, expected_mean);
 
     var sortedResult = [];
     for (var team_id in result) {

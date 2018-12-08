@@ -1,0 +1,77 @@
+.team-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-image: linear-gradient(to right, #fafafa, #eeeeee);
+    border: 1px solid #cccccc;
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.team-details .team-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.2));
+}
+
+.team-details .team-name {
+    font-size: 2em;
+    padding-left: 20px;
+}
+
+.team-details .win-percentage {
+    font-size: 2.5em;
+    font-weight: bold;
+    padding-left: 100px;
+}
+
+.calculation {
+    background-image: linear-gradient(to right, #fafafa, #eeeeee);
+    border-collapse: collapse;
+    font-size: 1.5em;
+}
+
+.calculation td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
+    width: 300px;
+}
+
+.calculation tr {
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+}
+
+.calculation .table-header {
+    background-color: white;
+    text-transform: uppercase;
+    border-left-style: none;
+    border-right-style: none;
+    font-size: 0.6em;
+}
+
+.calculation .table-header td {
+    text-align: center;
+    border-top-style: none;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.calculation .ratio-pie {
+    width: 100%;
+    height: 100px;
+}
+
+.calculation .ratio-text {
+    padding-top: 5px;
+}
+
+.calculation .points-text {
+    font-weight: bold;
+    font-size: 1.7em;
+}
