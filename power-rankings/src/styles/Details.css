@@ -62,11 +62,19 @@
     padding-bottom: 0;
 }
 
+.calculation .wins-graph {
+    width: 200px;
+    height: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .calculation .ratio-pie {
     width: 100%;
     height: 100px;
 }
 
+.calculation .wins-text,
 .calculation .ratio-text {
     padding-top: 5px;
 }

@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import Navigation from './Navigation';
 import axios from 'axios';
 import '../styles/Details.css';
+import { ResponsiveLine } from '@nivo/line';
 import { ResponsivePie } from '@nivo/pie';
+var gaussian = require('gaussian');
 var tokens = require('../tokens.js');
 
 class Details extends Component {
@@ -55,23 +57,50 @@ class Details extends Component {
     }
 
     formatPercentage(percentage) {
-        return percentage.toFixed(3).substring(1);
+        var fixedPercentage = percentage.toFixed(3);
+        if (fixedPercentage.startsWith("1")) {
+            return fixedPercentage;
+        }
+        return fixedPercentage.substring(1);
+    }
+
+    getLineData() {
+        var distribution = gaussian(0, 1);
+        var data = [];
+        for (var i = -3; i <= 3; i += 0.01) {
+            var x = i.toFixed(2);
+            var y = distribution.pdf(i);
+            data.push({
+                "x": x,
+                "y": y
+            })
+        }
+
+        return [{
+            "id": "dist",
+            "data": data
+        }];
+    }
+
+    getMarkerValue(wins) {
+        var distribution = gaussian(0, 1);
+        var ppf = distribution.ppf(wins);
+        return ppf.toFixed(2);
     }
 
     getPieData(ratio) {
         return [{
-            id: "current",
-            value: ratio
-        },
-        {
             id: "other",
             value: 1 - ratio
+        }, {
+            id: "current",
+            value: ratio
         }]
     }
 
     getPieStartAngle(week) {
         var curTotal = 0;
-        for (var i = 0; i < week; i++) {
+        for (var i = 0; i < week - 1; i++) {
             curTotal += this.state.details.calculation[i].ratio;
         }
         return curTotal * 360;
@@ -88,7 +117,11 @@ class Details extends Component {
                 <Navigation league_key={this.state.league_key} token={this.props.token} />
                 <h1>{`${this.state.settings.season} ${this.state.settings.name}`}</h1>
                 <h2 className={"sub-label"}>Rankings Details</h2>
-                <div className={"description"}>Details about the calculation for the Power Rankings win percentage for a specific team.</div>
+                <div className={"description"}>
+                    This shows details about Power Rankings calculation for a specific team.
+                    The win percentage indicates the likelihood that the team would win their game given the number of points that they scored.
+                    The weight indicates how much the week is considered in the Power Rankings calculation relative to the rest of the weeks.
+                </div>
                 <div className={"weeks-list"}>
                     <div className={"week-label"}>Week:</div>
                     {
@@ -110,7 +143,7 @@ class Details extends Component {
                             <tr className={"table-header"}>
                                 <td>Week</td>
                                 <td>Points</td>
-                                <td>Wins</td>
+                                <td>Win Percentage</td>
                                 <td>Weight</td>
                             </tr>
                             {
@@ -118,7 +151,28 @@ class Details extends Component {
                                     <tr key={week.week}>
                                         <td>{`Week ${week.week}`}</td>
                                         <td className={"points-text"}>{week.points}</td>
-                                        <td className={"wins-text"}>{this.formatPercentage(week.wins)}</td>
+                                        <td>
+                                            <div className={"wins-graph"}>
+                                                <ResponsiveLine
+                                                    data={this.getLineData()}
+                                                    axisTop={null}
+                                                    axisRight={null}
+                                                    axisBottom={null}
+                                                    axisLeft={null}
+                                                    enableGridX={false}
+                                                    enableGridY={false}
+                                                    enableDots={false}
+                                                    isInteractive={false}
+                                                    colors={"paired"}
+                                                    markers={[{
+                                                        axis: 'x',
+                                                        value: this.getMarkerValue(week.wins),
+                                                        lineStyle: { stroke: '#1F78B4', strokeWidth: 2 }
+                                                    }]}
+                                                />
+                                            </div>
+                                            <div className={"wins-text"}>{this.formatPercentage(week.wins)}</div>
+                                        </td>
                                         <td>
                                             <div className={"ratio-pie"}>
                                                 <ResponsivePie
@@ -129,7 +183,7 @@ class Details extends Component {
                                                     enableSlicesLabels={false}
                                                     isInteractive={false}
                                                     fit={false}
-                                                    colors={"set2"}
+                                                    colors={"paired"}
                                                 />
                                             </div>
                                             <div className={"ratio-text"}>{this.formatPercentage(week.ratio)}</div>

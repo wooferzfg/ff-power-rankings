@@ -6,6 +6,7 @@
     "@nivo/line": "^0.51.6",
     "@nivo/pie": "^0.51.0",
     "axios": "^0.18.0",
+    "gaussian": "^1.1.0",
     "query-string": "^6.2.0",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
