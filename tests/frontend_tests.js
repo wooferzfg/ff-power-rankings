@@ -32,7 +32,7 @@ function logIn() {
 }
 
 describe('Front-end tests', function () {
-    this.timeout(60000);
+    this.timeout(90000);
 
     it('should show the correct page title', function (done) {
         driver.get('http://localhost:3000')
@@ -91,7 +91,25 @@ describe('Front-end tests', function () {
             .then(team_name => team_name.should.equal('Kryptonite'))
             .then(() => findByCSS('.win-percentage', 0))
             .then(win_percentage => win_percentage.getText())
-            .then(win_percentage => win_percentage.should.equal('.733'))
+            .then(win_percentage => win_percentage.should.equal('.726'))
+            .then(() => done())
+            .catch(error => done(error));
+    });
+
+    it('should let you view rankings details', function (done) {
+        logIn()
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.league a', 0))
+            .then(league => league.click())
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.rankings-row', 0))
+            .then(rankings_row => rankings_row.click())
+            .then(() => driver.getCurrentUrl())
+            .then(url => url.should.include('/details'))
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.wins-text', 0))
+            .then(wins_text => wins_text.getText())
+            .then(wins_text => wins_text.should.equal('.699'))
             .then(() => done())
             .catch(error => done(error));
     });
@@ -106,6 +124,20 @@ describe('Front-end tests', function () {
             .then(graphButton => graphButton.click())
             .then(() => driver.getCurrentUrl())
             .then(url => url.should.include('/graph'))
+            .then(() => done())
+            .catch(error => done(error));
+    });
+
+    it('should let you switch to the standings view', function (done) {
+        logIn()
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.league a', 0))
+            .then(league => league.click())
+            .then(() => driver.sleep(2000))
+            .then(() => findButton('Standings'))
+            .then(graphButton => graphButton.click())
+            .then(() => driver.getCurrentUrl())
+            .then(url => url.should.include('/standings'))
             .then(() => done())
             .catch(error => done(error));
     });
@@ -137,6 +169,12 @@ describe('Front-end tests', function () {
             .then(dataButton => dataButton.click())
             .then(() => driver.getCurrentUrl())
             .then(url => url.should.include('/data'))
+            .then(() => driver.sleep(20000))
+            .then(() => findByCSS('.team-label', 0))
+            .then(teamLabel => teamLabel.click())
+            .then(() => findByCSS('.score', 0))
+            .then(scoreText => scoreText.getText())
+            .then(scoreText => scoreText.should.equal('54'))
             .then(() => done())
             .catch(error => done(error));
     });
