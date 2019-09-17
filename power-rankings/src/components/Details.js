@@ -85,7 +85,8 @@ class Details extends Component {
     getMarkerValue(wins) {
         var distribution = gaussian(0, 1);
         var ppf = distribution.ppf(wins);
-        return ppf.toFixed(2);
+        var fixedPpf = ppf.toFixed(2);
+        return Math.abs(fixedPpf) < 0.01 ? 0.01 : fixedPpf;
     }
 
     getPieData(ratio) {
