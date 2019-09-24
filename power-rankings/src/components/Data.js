@@ -54,12 +54,13 @@ class Data extends Component {
     loadScores() {
         axios.get(`${tokens.serverUrl()}/scores/${this.state.league_key}/${this.state.week}?token=${this.props.token}`).then(res => {
             var result = {};
-            for (var i = 1; i <= this.state.settings.num_teams; i++) {
-                result[i] = {};
-            }
             for (var i = 0; i < res.data.length; i++) {
                 var curData = res.data[i];
-                result[curData.team_id][curData.week] = curData.points;
+                var teamId = curData.team_id;
+                if (!result[teamId]) {
+                    result[teamId] = {};
+                }
+                result[teamId][curData.week] = curData.points;
             }
             this.setState({
                 scores: result
