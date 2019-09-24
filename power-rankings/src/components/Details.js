@@ -39,8 +39,13 @@ class Details extends Component {
 
     loadTeam() {
         axios.get(`${tokens.serverUrl()}/league/${this.state.league_key}/teams?token=${this.props.token}`).then(res => {
-            var teamIndex = parseInt(this.state.team_id) - 1;
-            var curTeam = res.data[teamIndex];
+            var curTeam;
+            for (var i = 0; i < res.data.length; i++) {
+                var team = res.data[i];
+                if (team.team_id === this.state.team_id) {
+                    curTeam = team;
+                }
+            }
             this.setState({
                 team: curTeam
             });
