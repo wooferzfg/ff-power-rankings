@@ -16,32 +16,11 @@ const router = express.Router();
 router.get('/leagues', function (req, res) {
     var yf = auth.getYF(req.query.token);
 
-    yf.user.games(
-        (err, data) => parseGamesResult(yf, res, err, data)
-    );
+    yf.user.game_leagues_for_game_code(
+        'nfl',
+        (err, data) => parseLeaguesResult(res, err, data)
+    )
 });
-
-function parseGamesResult(yf, res, err, data) {
-    if (err) {
-        res.status(400).json(err);
-    } else {
-        var games = [];
-        var gamesData = data["games"];
-        for (var i = 0; i < gamesData.length; i++) {
-            var curGameData = gamesData[i];
-            var curSeason = parseInt(curGameData["season"])
-            if (curSeason >= 2013 && curGameData["code"] == "nfl") {
-                games.push(curGameData["game_key"]);
-            }
-        }
-        var gameKeys = games.join();
-
-        yf.user.game_leagues(
-            gameKeys,
-            (err, data) => parseLeaguesResult(res, err, data)
-        )
-    }
-}
 
 function parseLeaguesResult(res, err, data) {
     if (err) {
@@ -52,14 +31,17 @@ function parseLeaguesResult(res, err, data) {
         var gamesData = data["games"];
         for (var i = 0; i < gamesData.length; i++) {
             var curGameData = gamesData[i];
-            var leaguesData = curGameData["leagues"];
-            for (var j = 0; j < leaguesData.length; j++) {
-                var curLeagueData = leaguesData[j][0];
-                var leagueResult = {};
-                leagueResult["league_key"] = curLeagueData["league_key"];
-                leagueResult["name"] = curLeagueData["name"];
-                leagueResult["season"] = parseInt(curLeagueData["season"]);
-                result.push(leagueResult);
+            var curSeason = parseInt(curGameData["season"]);
+            if (curSeason >= 2013) {
+                var leaguesData = curGameData["leagues"];
+                for (var j = 0; j < leaguesData.length; j++) {
+                    var curLeagueData = leaguesData[j][0];
+                    var leagueResult = {};
+                    leagueResult["league_key"] = curLeagueData["league_key"];
+                    leagueResult["name"] = curLeagueData["name"];
+                    leagueResult["season"] = parseInt(curLeagueData["season"]);
+                    result.push(leagueResult);
+                }
             }
         }
 
