@@ -9,7 +9,6 @@
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
-    "ejs": "^2.6.1",
     "express": "^4.17.1",
     "gaussian": "^1.1.0",
     "mathjs": "^5.2.3",
@@ -18,14 +17,8 @@
     "passport-oauth2": "^1.4.0",
     "yahoo-fantasy": "github:wooferzfg/yahoo-fantasy-sports-api"
   },
-  "devDependencies": {
-    "apidoc": "^0.17.6",
-    "chai": "^4.2.0",
-    "chai-almost": "^1.0.1",
-    "chai-http": "^4.2.0",
-    "chromedriver": "^2.44.1",
-    "minimist": "^1.2.0",
-    "mocha": "^5.2.0",
-    "selenium-webdriver": "^4.0.0-alpha.1"
+  "devDependencies": {},
+  "scripts": {
+    "start": "node routes/server.js"
   }
 }
