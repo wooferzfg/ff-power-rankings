@@ -20,6 +20,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node routes/server.js"
+    "server": "node routes/server.js",
+    "ui": "cd power-rankings && npm run start"
   }
 }

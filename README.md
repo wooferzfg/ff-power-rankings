@@ -4,5 +4,5 @@ In order to run the application:
 2. Download [ngrok](https://ngrok.com/download) and forward port 5000 with `./ngrok http 5000`
 3. Create a [Yahoo App](https://developer.yahoo.com/apps/create), set the the redirect URL to the ngrok URL (`http://aaaaaaaa.ngrok.io/auth/callback`), and only ask for Fantasy Sports Read permissions.
 4. Fill in `power-rankings/src/tokens.js` with the tokens from Yahoo and the ngrok URL.
-5. Run `npm run start` in the root directory to start the backend server.
-6. Run `npm run start` in the `power-rankings` directory to start the frontend server.
+5. Run `npm run server` in the root directory to start the backend server.
+6. Run `npm run ui` in the root directory to start the frontend server.
